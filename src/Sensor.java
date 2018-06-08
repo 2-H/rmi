@@ -2,21 +2,43 @@
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Random;
 
-public class Sensor extends UnicastRemoteObject implements Remote {
+public class Sensor extends UnicastRemoteObject implements SensorInterface {
+
+    int x, y;
 
     public Sensor() throws RemoteException {
         super();
+        Random rand = new Random();
+        x = rand.nextInt(100);
+        y = rand.nextInt(100);
+    }
+
+    @Override
+    public void Configure_X_Y(int newX, int newY) throws RemoteException {
+        this.x = newX;
+        this.y = newY;
+        System.out.println("My new x and y are (" + newX + ", " + y + ").");
+    }
+
+    @Override
+    public int getX() throws RemoteException {
+        return x;
+    }
+
+    @Override
+    public int getY() throws RemoteException {
+        return y;
     }
 
     public void run() {
+        //System.setSecurityManager(new RMISecurityManager());
         try {
-            SimulatorInterface sim = (SimulatorInterface) Naming.lookup("rmi://127.0.0.1:1234/Supervisor");
-            System.out.println("Registered");
-            sim.register("s1", 100, 200);
+            SupervisorInterface SRI = (SupervisorInterface) Naming.lookup("rmi://127.0.0.1:1234/SensorRoom");
+            SRI.register(this);
         } catch (MalformedURLException | NotBoundException | RemoteException ex) {
             System.out.println("Fatal error: " + ex.getMessage());
         }
