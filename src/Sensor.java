@@ -6,6 +6,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Sensor extends UnicastRemoteObject implements SensorInterface {
 
@@ -104,6 +105,15 @@ public class Sensor extends UnicastRemoteObject implements SensorInterface {
 //            while (true) {
 //                System.out.println("I'm a sensor " + i++);
 //            }
+
+            DataServerImp ds = (DataServerImp) Naming.lookup("rmi://127.0.0.1:1234/DataServer");
+
+            Scanner sc = new Scanner(System.in);
+            
+            System.out.println("Enter x , y , width , height :");
+            
+            this.imgBytes = ds.getImage(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.nextInt());
+            
         } catch (MalformedURLException | NotBoundException | RemoteException ex) {
             System.out.println("Fatal error: " + ex.getMessage());
         }
