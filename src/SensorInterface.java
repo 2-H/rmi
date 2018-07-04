@@ -4,9 +4,15 @@ import java.rmi.RemoteException;
 
 public interface SensorInterface extends Remote {
 
-    public void Configure_X_Y(int newX, int newY) throws RemoteException;
+    public void configureRegion(Point newX1, Point newX2) throws RemoteException;
 
-    public int getX() throws RemoteException;
+    public void changeState(int i) throws RemoteException;
 
-    public int getY() throws RemoteException;
+    public Point getX1() throws RemoteException;
+
+    public Point getX2() throws RemoteException;
+
+    public String getState() throws RemoteException;
+
+    public void setImgBytes(byte[] imgBytes) throws RemoteException;
 }

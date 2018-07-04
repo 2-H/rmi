@@ -1,4 +1,5 @@
 
+import static java.lang.System.exit;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -8,37 +9,101 @@ import java.util.Random;
 
 public class Sensor extends UnicastRemoteObject implements SensorInterface {
 
-    int x, y;
+    Point x1, x2;
+    State currentState;
+    SupervisorInterface SRI;
+    String bindingString;
+    byte[] imgBytes;
+
+    enum State {
+        STANDBY, WAKE
+    };
 
     public Sensor() throws RemoteException {
         super();
         Random rand = new Random();
-        x = rand.nextInt(100);
-        y = rand.nextInt(100);
+        x1 = new Point(rand.nextInt(100), rand.nextInt(100));
+        x2 = new Point(rand.nextInt(100), rand.nextInt(100));
+        currentState = State.WAKE;
     }
 
     @Override
-    public void Configure_X_Y(int newX, int newY) throws RemoteException {
-        this.x = newX;
-        this.y = newY;
-        System.out.println("My new x and y are (" + newX + ", " + y + ").");
+    public void changeState(int i) throws RemoteException {
+        switch (i) {
+            case 4://RESTART
+                main(null);
+                System.out.println("Restarted.");
+                break;
+            case 3: {//STOP
+                try {
+                    Naming.unbind("SensorRoom");
+                    UnicastRemoteObject.unexportObject(SRI, true);
+                } catch (MalformedURLException | NotBoundException | RemoteException ex) {
+                    System.out.println("Fatal error: " + ex.getMessage());
+                }
+                exit(0);
+            }
+            break;
+            case 2: {//STANDBY
+                System.out.println("Waiting...");
+                currentState = State.STANDBY;
+                synchronized (this) {
+                    try {
+                        wait();
+                        System.out.println("Wait finished.");
+                    } catch (InterruptedException ex) {
+                        System.out.println("Fatal error: " + ex.toString());
+                    }
+                }
+                System.out.println("after waiting");
+            }
+            break;
+            case 1://WAKE
+                currentState = State.WAKE;
+                System.out.println("Waked.");
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
-    public int getX() throws RemoteException {
-        return x;
+    public void configureRegion(Point newX1, Point newX2) throws RemoteException {
+        this.x1 = newX1;
+        this.x2 = newX2;
+        System.out.println("My new x1 = (" + x1.getX() + ", " + x1.getY() + ") x2 = (" + x2.getX() + ", " + x2.getY() + ")");
     }
 
     @Override
-    public int getY() throws RemoteException {
-        return y;
+    public void setImgBytes(byte[] imgBytes) throws RemoteException {
+        this.imgBytes = imgBytes;
+    }
+
+    @Override
+    public String getState() {
+        return currentState.toString();
+    }
+
+    @Override
+    public Point getX1() throws RemoteException {
+        return x1;
+    }
+
+    @Override
+    public Point getX2() throws RemoteException {
+        return x2;
     }
 
     public void run() {
         //System.setSecurityManager(new RMISecurityManager());
         try {
-            SupervisorInterface SRI = (SupervisorInterface) Naming.lookup("rmi://127.0.0.1:1234/SensorRoom");
+            bindingString = "rmi://127.0.0.1:1234/SensorRoom";
+            SRI = (SupervisorInterface) Naming.lookup(bindingString);
             SRI.register(this);
+//            int i = 0;
+//            while (true) {
+//                System.out.println("I'm a sensor " + i++);
+//            }
         } catch (MalformedURLException | NotBoundException | RemoteException ex) {
             System.out.println("Fatal error: " + ex.getMessage());
         }
