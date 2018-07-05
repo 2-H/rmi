@@ -4,24 +4,29 @@
  * and open the template in the editor.
  */
 
-
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import javax.imageio.ImageIO;
 
 /**
  *
  * @author kassem
  */
-public class DataServerImp implements DataServerHost {
+public class DataServerImp extends UnicastRemoteObject implements DataServerHost {
+
+    public DataServerImp() throws RemoteException {
+        super();
+    }
 
     @Override
     public byte[] getImage(int x, int y, int w, int h) throws RemoteException {
@@ -39,11 +44,12 @@ public class DataServerImp implements DataServerHost {
             return null;
         }
     }
-    
+
     public static void main(String[] args) throws RemoteException, MalformedURLException {
+        Registry r = LocateRegistry.createRegistry(1235);
         DataServerImp ds = new DataServerImp();
         //ds.getImage(300, 200, 500,700);        
-        Naming.rebind("rmi://rmi://127.0.0.1:1234/DataServer", ds);   
-     }
+        r.rebind("DataServer", ds);
+    }
 
 }

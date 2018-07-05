@@ -2,6 +2,8 @@
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -115,8 +117,9 @@ public class Supervisor extends UnicastRemoteObject implements SupervisorInterfa
 
     public static void main(String[] args) throws InterruptedException {
         try {
+            Registry r = LocateRegistry.createRegistry(1234);
             Supervisor theSupervisor = new Supervisor();
-            Naming.rebind("rmi://127.0.0.1:1234/SensorRoom", theSupervisor);
+            r.rebind("SensorRoom", theSupervisor);
             while (true) {
                 try {
                     theSupervisor.generator();
@@ -124,7 +127,7 @@ public class Supervisor extends UnicastRemoteObject implements SupervisorInterfa
                     System.out.println("Fatal error: " + ex.getMessage());
                 }
             }
-        } catch (MalformedURLException | RemoteException e) {
+        } catch (Exception e) {
             System.out.println("Fatal error: " + e.getMessage());
         }
     }

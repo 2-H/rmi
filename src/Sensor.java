@@ -3,6 +3,7 @@ import static java.lang.System.exit;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
+import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Random;
@@ -96,26 +97,21 @@ public class Sensor extends UnicastRemoteObject implements SensorInterface {
     }
 
     public void run() {
-        //System.setSecurityManager(new RMISecurityManager());
+        //    System.setSecurityManager(new RMISecurityManager());
         try {
-            bindingString = "rmi://127.0.0.1:1234/SensorRoom";
-            SRI = (SupervisorInterface) Naming.lookup(bindingString);
+            bindingString = "rmi://localhost:1234/SensorRoom";//SensorRoom
+           SupervisorInterface SRI = (SupervisorInterface) Naming.lookup(bindingString);
             SRI.register(this);
-//            int i = 0;
-//            while (true) {
-//                System.out.println("I'm a sensor " + i++);
-//            }
-
-            DataServerImp ds = (DataServerImp) Naming.lookup("rmi://127.0.0.1:1234/DataServer");
-
-            Scanner sc = new Scanner(System.in);
-            
-            System.out.println("Enter x , y , width , height :");
-            
-            this.imgBytes = ds.getImage(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.nextInt());
-            
+            System.out.println("Region 1");
+            DataServerHost ds = (DataServerHost) Naming.lookup("rmi://localhost:1235/DataServer");
+            System.out.println("Region 2");
+//            Scanner sc = new Scanner(System.in);
+//            
+//            System.out.println("Enter x , y , width , height :");
+//            
+//            this.imgBytes = ds.getImage(sc.nextInt(), sc.nextInt(), sc.nextInt(), sc.nextInt());
         } catch (MalformedURLException | NotBoundException | RemoteException ex) {
-            System.out.println("Fatal error: " + ex.getMessage());
+            System.out.println("Fatal error: " + ex.toString());
         }
     }
 
