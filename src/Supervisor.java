@@ -119,7 +119,7 @@ public class Supervisor extends UnicastRemoteObject implements SupervisorInterfa
         try {
             Registry r = LocateRegistry.createRegistry(1234);
             Supervisor theSupervisor = new Supervisor();
-            r.rebind("SensorRoom", theSupervisor);
+            r.rebind("Supervisor", theSupervisor);
             while (true) {
                 try {
                     theSupervisor.generator();
@@ -130,6 +130,11 @@ public class Supervisor extends UnicastRemoteObject implements SupervisorInterfa
         } catch (Exception e) {
             System.out.println("Fatal error: " + e.getMessage());
         }
+    }
+
+    @Override
+    public ArrayList<SensorInterface> getSensors() throws RemoteException {
+        return ListOfSensorsReference;
     }
 
 }

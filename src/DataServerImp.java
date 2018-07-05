@@ -29,12 +29,16 @@ public class DataServerImp extends UnicastRemoteObject implements DataServerHost
     }
 
     @Override
-    public byte[] getImage(int x, int y, int w, int h) throws RemoteException {
+    public byte[] getImage(int x1, int y1, int x2, int y2) throws RemoteException {
         Image src;
         try {
+            System.out.println("getImage from Data Server " + x1);
+
             src = ImageIO.read(new File("java.jpg"));
+            int w = Math.abs(x2 - x1);
+            int h = Math.abs(y2 - y1);
             BufferedImage dst = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-            dst.getGraphics().drawImage(src, 0, 0, w, h, x, y, x + w, y + h, null);
+            dst.getGraphics().drawImage(src, 0, 0, w, h, x1, y1, x2, y2, null);
             ImageIO.write(dst, "png", new File("java_cropped.png"));
             ByteArrayOutputStream arr = new ByteArrayOutputStream();
             ImageIO.write(dst, "png", arr);

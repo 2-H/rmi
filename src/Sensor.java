@@ -5,25 +5,53 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Sensor extends UnicastRemoteObject implements SensorInterface {
 
+    public int index;
     Point x1, x2;
     State currentState;
     SupervisorInterface SRI;
     String bindingString;
     byte[] imgBytes;
 
+    @Override
+    public SensorData getSensorData() throws Exception {
+        DataServerHost ds;
+        ds = (DataServerHost) Naming.lookup("rmi://localhost:1235/DataServer");
+        imgBytes = ds.getImage(x1.x, x1.y, x2.x, x2.y);
+        return new SensorData(this.index, x1, x2, currentState.toString(), imgBytes);
+    }
+
+    @Override
+    public String ping() throws RemoteException {
+        return "I am alive " + this.index;
+    }
+
     enum State {
         STANDBY, WAKE
     };
 
+    public Sensor(int x, int y, int w, int h) throws RemoteException {
+        Random rn = new Random();
+        this.index = Math.abs(rn.nextInt()) % 500000000;
+        this.x1 = new Point(x, y);
+        this.x2 = new Point(x + w, y + h);
+        currentState = State.WAKE;
+        run();
+    }
+
     public Sensor() throws RemoteException {
         super();
         Random rand = new Random();
+        this.index = Math.abs(rand.nextInt()) % 500000000;
         x1 = new Point(rand.nextInt(100), rand.nextInt(100));
         x2 = new Point(rand.nextInt(100), rand.nextInt(100));
         currentState = State.WAKE;
@@ -99,12 +127,14 @@ public class Sensor extends UnicastRemoteObject implements SensorInterface {
     public void run() {
         //    System.setSecurityManager(new RMISecurityManager());
         try {
-            bindingString = "rmi://localhost:1234/SensorRoom";//SensorRoom
-           SupervisorInterface SRI = (SupervisorInterface) Naming.lookup(bindingString);
+            bindingString = "rmi://localhost:1234/Supervisor";//SensorRoom
+            SupervisorInterface SRI = (SupervisorInterface) Naming.lookup(bindingString);
             SRI.register(this);
             System.out.println("Region 1");
-            DataServerHost ds = (DataServerHost) Naming.lookup("rmi://localhost:1235/DataServer");
-            System.out.println("Region 2");
+
+            Registry r = LocateRegistry.createRegistry(1236);
+            String sensorname = "rmi://localhost:1236/Sensor" + this.index;
+            Naming.rebind(sensorname, this);
 //            Scanner sc = new Scanner(System.in);
 //            
 //            System.out.println("Enter x , y , width , height :");
