@@ -49,8 +49,8 @@ public class Test {
         int x2 = 125;
         int y2 = 125;
 
-        lst.add(new SensorData(1, new Point(50, 50), new Point(100, 100), "", getImage(50, 50, 100, 100)));
-        lst.add(new SensorData(1, new Point(120, 50), new Point(200, 100), "", getImage(120, 50, 200, 100)));
+        lst.add(new SensorData(1, new Point(50, 50), new Point(100, 100), "", getImage(50, 50, 100, 100), -1));
+        lst.add(new SensorData(1, new Point(120, 50), new Point(200, 100), "", getImage(120, 50, 200, 100), -1));
 
         BufferedImage dst = new BufferedImage(x2 - x1, y2 - y1, BufferedImage.TYPE_INT_ARGB);
         int index = 0;

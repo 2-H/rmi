@@ -3,19 +3,15 @@ import static java.lang.System.exit;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
-import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Random;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Sensor extends UnicastRemoteObject implements SensorInterface {
 
-    public int index;
+    public int index, parentIndex;
     Point x1, x2;
     State currentState;
     SupervisorInterface SRI;
@@ -27,7 +23,7 @@ public class Sensor extends UnicastRemoteObject implements SensorInterface {
         DataServerHost ds;
         ds = (DataServerHost) Naming.lookup("rmi://localhost:1235/DataServer");
         imgBytes = ds.getImage(x1.x, x1.y, x2.x, x2.y);
-        return new SensorData(this.index, x1, x2, currentState.toString(), imgBytes);
+        return new SensorData(this.index, x1, x2, currentState.toString(), imgBytes, parentIndex);
     }
 
     @Override
@@ -39,11 +35,12 @@ public class Sensor extends UnicastRemoteObject implements SensorInterface {
         STANDBY, WAKE
     };
 
-    public Sensor(int x1, int y1, int x2, int y2) throws RemoteException {
+    public Sensor(int x1, int y1, int x2, int y2, int parentIndex) throws RemoteException {
         Random rn = new Random();
         this.index = Math.abs(rn.nextInt()) % 500000000;
         this.x1 = new Point(x1, y1);
-        this.x2 = new Point(x2 , y2 );
+        this.x2 = new Point(x2, y2);
+        this.parentIndex = parentIndex;
         currentState = State.WAKE;
         run();
     }
@@ -148,6 +145,31 @@ public class Sensor extends UnicastRemoteObject implements SensorInterface {
         } catch (MalformedURLException | NotBoundException | RemoteException ex) {
             System.out.println("Fatal error: " + ex.toString());
         }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 29 * hash + this.index;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Sensor other = (Sensor) obj;
+        if (this.index != other.index) {
+            return false;
+        }
+        return true;
     }
 
     public static void main(String[] args) throws RemoteException {

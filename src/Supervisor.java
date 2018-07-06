@@ -1,16 +1,19 @@
 
-import java.net.MalformedURLException;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Supervisor extends UnicastRemoteObject implements SupervisorInterface {
 
     ArrayList<SensorInterface> ListOfSensorsReference;
+    HashMap<Integer, SensorInterface> secondTier;
+    HashMap<SensorInterface, ArrayList<SensorInterface>> baseTier;
     Scanner keyboard;
     int imgWidth, imgHeight;
     static final int overlap = 10;
@@ -18,13 +21,31 @@ public class Supervisor extends UnicastRemoteObject implements SupervisorInterfa
     public Supervisor() throws RemoteException {
         super();
         ListOfSensorsReference = new ArrayList<>();
+        secondTier = new HashMap<>();
+        baseTier = new HashMap<>();
         keyboard = new Scanner(System.in);
     }
 
     @Override
     public void register(SensorInterface SI) throws RemoteException {
-        ListOfSensorsReference.add(SI);
-        keyboard = new Scanner(System.in);
+        try {
+            SensorData sd = SI.getSensorData();
+            //ListOfSensorsReference.add(SI);
+            if (sd.parentIndex == -1) {
+                secondTier.put(sd.index, SI);
+            } else {
+                SensorInterface parent = secondTier.get(sd.index);
+                ArrayList<SensorInterface> arr = baseTier.get(parent);
+                if(arr == null || arr.isEmpty()){
+                    arr = new ArrayList<>();
+                }
+                arr.add(SI);
+                baseTier.put(parent, arr);
+            }
+            keyboard = new Scanner(System.in);
+        } catch (Exception ex) {
+            Logger.getLogger(Supervisor.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void configureRegion(int sensorNbr) throws RemoteException {
@@ -134,7 +155,17 @@ public class Supervisor extends UnicastRemoteObject implements SupervisorInterfa
 
     @Override
     public ArrayList<SensorInterface> getSensors() throws RemoteException {
-        return ListOfSensorsReference;
+        ArrayList<SensorInterface> arr = new ArrayList<>();
+        arr.addAll(secondTier.values());
+        for (ArrayList<SensorInterface> children : baseTier.values()) {
+            arr.addAll(children);
+        }
+        return arr;
+    }
+
+    @Override
+    public HashMap<Integer, SensorInterface> getSecondTier() throws RemoteException {
+        return secondTier;
     }
 
 }

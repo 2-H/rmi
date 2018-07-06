@@ -19,12 +19,15 @@ public class SensorData implements Serializable {
     public String State;
     public byte[] image;
 
-    public SensorData(int index,Point x1, Point x2, String State, byte[] image) {
-        this.index= index;
+    public int parentIndex;
+
+    public SensorData(int index, Point x1, Point x2, String State, byte[] image, int parentIndex) {
+        this.index = index;
         this.x1 = x1;
         this.x2 = x2;
         this.State = State;
         this.image = image;
+        this.parentIndex = parentIndex;
     }
 
 }
