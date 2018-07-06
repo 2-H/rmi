@@ -1,7 +1,11 @@
 
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
+import java.awt.image.ImageProducer;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +20,7 @@ import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -51,8 +56,7 @@ public class MainForm extends javax.swing.JFrame {
                     int index = Integer.parseInt(tbSensors.getValueAt(tbSensors.getSelectedRow(), 1).toString());
                     System.out.println(index);
                     try {
-                        SensorInterface sn = (SensorInterface) Naming.lookup("rmi://localhost:1235/Sensor" + index);
-                        ShowImage(sn.getSensorData().image);
+                        ShowImage(index);
                     } catch (Exception ex) {
                         Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -76,15 +80,25 @@ public class MainForm extends javax.swing.JFrame {
         tbSensors = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
-        txtsensorx = new javax.swing.JTextField();
-        txtsensory = new javax.swing.JTextField();
-        txtsensorwidth = new javax.swing.JTextField();
-        txtsensorheight = new javax.swing.JTextField();
+        txtsensorx1 = new javax.swing.JTextField();
+        txtsensory1 = new javax.swing.JTextField();
+        txtsensorx2 = new javax.swing.JTextField();
+        txtsensory2 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         imagelabel = new javax.swing.JLabel();
+        txtregionx1 = new javax.swing.JTextField();
+        txtregiony1 = new javax.swing.JTextField();
+        txtregionx2 = new javax.swing.JTextField();
+        txtregiony2 = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
+        jComboBox1 = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -93,11 +107,11 @@ public class MainForm extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Sensor", "Id", "X", "Y", "Width", "Height", "Status"
+                "Sensor", "Id", "X1", "Y2", "X2", "Y2", "Status"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Float.class, java.lang.Float.class, java.lang.String.class
+                java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false, false
@@ -115,22 +129,39 @@ public class MainForm extends javax.swing.JFrame {
 
         jLabel1.setText("Sensors");
 
-        jButton2.setText("Add Sensor");
+        jButton2.setText("Save Sensor");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
 
-        jLabel2.setText("X");
+        jLabel2.setText("X1");
 
-        jLabel3.setText("Y");
+        jLabel3.setText("Y1");
 
-        jLabel4.setText("Width");
+        jLabel4.setText("X2");
 
-        jLabel5.setText("Height");
+        jLabel5.setText("Y2");
 
         imagelabel.setText(".");
+
+        jLabel6.setText("Y2");
+
+        jLabel7.setText("X2");
+
+        jLabel8.setText("Y1");
+
+        jLabel9.setText("X1");
+
+        jButton3.setText("Get Region");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -141,37 +172,75 @@ public class MainForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtsensorx, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtsensorx1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtsensory, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtsensory1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtsensorwidth, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtsensorx2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(txtsensorheight, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel5)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(txtsensory2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(35, 35, 35)
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton2)))
-                        .addGap(97, 97, 97))
+                                .addComponent(jButton2))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel1)
-                        .addGap(468, 468, 468))
+                        .addGap(483, 483, 483))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(imagelabel, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(67, 67, 67))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtregionx1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtregiony1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtregionx2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(txtregiony2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(31, 31, 31)
+                        .addComponent(jButton3)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(73, Short.MAX_VALUE)
+                .addContainerGap(12, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtsensorx1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtsensory1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtsensorx2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtsensory2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -180,29 +249,34 @@ public class MainForm extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(17, 17, 17)
                         .addComponent(imagelabel, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5))
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtsensorx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtsensory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtsensorwidth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtsensorheight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2))
-                .addGap(65, 65, 65))
+                    .addComponent(txtregionx1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtregiony1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtregionx2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtregiony2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton3))
+                .addGap(39, 39, 39))
         );
 
-        txtsensorx.getAccessibleContext().setAccessibleName("");
+        txtsensorx1.getAccessibleContext().setAccessibleName("");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void ShowImage(byte[] bytes) throws IOException {
-        System.out.println("MainForm.ShowImage() " + bytes.length);
-        BufferedImage image = ImageIO.read(new ByteArrayInputStream(bytes));
+    private void ShowImage(int index) throws IOException, RemoteException, NotBoundException, Exception {
+
+        SensorInterface sn = (SensorInterface) Naming.lookup("rmi://localhost:1236/Sensor" + index);
+        SensorData sd = sn.getSensorData();
+
+        System.out.println("MainForm.ShowImage() " + sd.image.length);
+        BufferedImage image = ImageIO.read(new ByteArrayInputStream(sd.image));
         imagelabel.setIcon(new Icon() {
             @Override
             public void paintIcon(Component cmpnt, Graphics grphcs, int i, int i1) {
@@ -225,18 +299,126 @@ public class MainForm extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
         try {
-            int x = Integer.parseInt(txtsensorx.getText());
-            int y = Integer.parseInt(txtsensory.getText());
-            int w = Integer.parseInt(txtsensorwidth.getText());
-            int h = Integer.parseInt(txtsensorheight.getText());
 
-            Sensor s = new Sensor(x, y, w, h);
-            refreshTable();
+            int x1 = Integer.parseInt(txtsensorx1.getText());
+            int y1 = Integer.parseInt(txtsensory1.getText());
+            int x2 = Integer.parseInt(txtsensorx2.getText());
+            int y2 = Integer.parseInt(txtsensory2.getText());
+            if (x1 >= x2 || y1 >= y2) {
+                JOptionPane.showMessageDialog(null, "please ensure : x1<x2 and y1<y2");
+            } else {
+                Sensor s = new Sensor(x1, y1, x2, y2);
+                try {
+                    ShowImage(s.index);
+                } catch (Exception ex) {
+                    Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                refreshTable();
+            }
         } catch (Exception ex) {
             Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        SupervisorInterface SRI;
+        try {
+            SRI = (SupervisorInterface) Naming.lookup(bindingString);
+            ArrayList<SensorInterface> lst = SRI.getSensors();
+            int x1 = Integer.parseInt(txtregionx1.getText());
+            int y1 = Integer.parseInt(txtregiony1.getText());
+            int x2 = Integer.parseInt(txtregionx2.getText());
+            int y2 = Integer.parseInt(txtregiony2.getText());
+            if (x1 >= x2 || y1 >= y2) {
+                JOptionPane.showMessageDialog(null, "please ensure : x1<x2 and y1<y2");
+
+            } else {
+                BufferedImage dst = new BufferedImage(x2 - x1, y2 - y1, BufferedImage.TYPE_INT_ARGB);
+                int index = 0;
+                for (SensorInterface s : lst) {
+                    index++;
+                    SensorData sd = s.getSensorData();
+                    Rectangle rect1 = new Rectangle(x1, y1, x2 - x1, y2 - y1);
+                    Rectangle rect2 = new Rectangle(sd.x1.x, sd.x1.y, sd.x2.x - sd.x1.x, sd.x2.y - sd.x1.y);
+                    Rectangle i = rect1.intersection(rect2);
+                    int newx1 = (int) i.getX();
+                    int newy1 = (int) i.getY();
+                    int newx2 = (int) i.getX() + (int) i.getWidth();
+                    int newy2 = (int) i.getY() + (int) i.getHeight();
+
+                    //coordinates of intersection with respect to sensor image
+                    int cropx1 = Math.abs(newx1 - sd.x1.x);
+                    int cropy1 = Math.abs(newy1 - sd.x1.y);
+                    int cropx2 = Math.abs(newx2 - sd.x1.x);
+                    int cropy2 = Math.abs(newy2 - sd.x1.y);
+                    //coordinates of intersection with respect to new region
+                    int newrectx1 = Math.abs(newx1 - x1);
+                    int newrecty1 = Math.abs(newy1 - y1);
+                    int newrectx2 = Math.abs(newx2 - x1);
+                    int newrecty2 = Math.abs(newy2 - y1);
+                    
+                    System.out.println(index + " sd.x1.x " + sd.x1.x + "," + sd.x1.y + "_" + sd.x2.x + "," + sd.x2.y);
+
+                    System.out.println(index + " x1 " + x1 + "," + y1 + "_" + x2 + "," + y2);
+
+                    System.out.println(index + " newx1 " + newx1 + "," + newy1 + "_" + newx2 + "," + newy2);
+
+                    System.out.println(index + " cropx1 " + cropx1 + "," + cropy1 + "_" + cropx2 + "," + cropy2);
+                    System.out.println(index + " newrectx1 " + newrectx1 + "," + newrecty1 + "_" + newrectx2 + "," + newrecty2);
+
+                    int w = Math.abs(newx2 - newx1);
+                    int h = Math.abs(newy2 - newy1);
+                    if (!i.isEmpty()) {
+                        {
+                            BufferedImage src = ImageIO.read(new ByteArrayInputStream(sd.image));
+                            ImageIO.write(src, "png", new File("sensor_" + index + ".png"));
+
+                            dst.getGraphics().drawImage(src, newrectx1, newrecty1, newrectx2, newrecty2, cropx1, cropy1, cropx2, cropy2, null);
+                            ImageIO.write(dst, "png", new File("sensor_cropped_" + index + "_width_" + (int) i.getWidth() + "_height_" + (int) i.getHeight() + "_.png"));
+                        }
+                    }
+
+                    ImageIO.write(dst, "png", new File("sensor_final.png"));
+
+                }
+                /*
+                for (SensorInterface s : lst) {
+                    index++;
+                    SensorData sd = s.getSensorData();
+                    Rectangle rect1 = new Rectangle(x1, y1, x2 - x1, y2 - y1);
+                    Rectangle rect2 = new Rectangle(sd.x1.x, sd.x1.y, sd.x2.x - sd.x1.x, sd.x2.y - sd.x1.y);
+                    Rectangle i = rect1.intersection(rect2);
+                    int newx1 = (int) i.getX();
+                    int newy1 = (int) i.getY();
+                    int newx2 = (int) i.getX() + (int) i.getWidth();
+                    int newy2 = (int) i.getY() + (int) i.getHeight();
+
+                    int w = Math.abs(x2 - x1);
+                    int h = Math.abs(y2 - y1);
+
+                    if (!i.isEmpty()) {
+                        {
+                            BufferedImage src = ImageIO.read(new ByteArrayInputStream(sd.image));
+                            ImageIO.write(src, "png", new File("sensor_" + index + ".png"));
+                            ImageIO.write(src, "jpg", new File("sensor_" + index + ".jpg"));
+
+                            dst.getGraphics().drawImage(src, newx1, newy1, newx2, newy2, newx1, newy1, newx2, newy2,
+                                    null);
+                            ImageIO.write(dst, "png", new File("sensor_cropped_" + index + "_width_" + (int) i.getWidth() + "_height_" + (int) i.getHeight() + "_.png"));
+                            ImageIO.write(dst, "jpg", new File("sensor_cropped_" + index + "_width_" + (int) i.getWidth() + "_height_" + (int) i.getHeight() + "_.jpg"));
+
+                        }
+                    }
+                }
+                ImageIO.write(dst, "png", new File("sensor_final.png"));
+                 */
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -255,7 +437,7 @@ public class MainForm extends javax.swing.JFrame {
                     index++;
                     SensorData sd = s.getSensorData();
                     //if(index==0)
-                      //    ShowImage(sd.image);
+                    //    ShowImage(sd.image);
                     model.addRow(new Object[]{"Sensor " + index, sd.index,
                         sd.x1.x, sd.x1.y, sd.x2.x - sd.x1.x, sd.x2.y - sd.x1.y, sd.State});
                 }
@@ -311,16 +493,26 @@ public class MainForm extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel imagelabel;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tbSensors;
-    private javax.swing.JTextField txtsensorheight;
-    private javax.swing.JTextField txtsensorwidth;
-    private javax.swing.JTextField txtsensorx;
-    private javax.swing.JTextField txtsensory;
+    private javax.swing.JTextField txtregionx1;
+    private javax.swing.JTextField txtregionx2;
+    private javax.swing.JTextField txtregiony1;
+    private javax.swing.JTextField txtregiony2;
+    private javax.swing.JTextField txtsensorx1;
+    private javax.swing.JTextField txtsensorx2;
+    private javax.swing.JTextField txtsensory1;
+    private javax.swing.JTextField txtsensory2;
     // End of variables declaration//GEN-END:variables
 }

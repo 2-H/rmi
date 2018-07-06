@@ -39,11 +39,11 @@ public class Sensor extends UnicastRemoteObject implements SensorInterface {
         STANDBY, WAKE
     };
 
-    public Sensor(int x, int y, int w, int h) throws RemoteException {
+    public Sensor(int x1, int y1, int x2, int y2) throws RemoteException {
         Random rn = new Random();
         this.index = Math.abs(rn.nextInt()) % 500000000;
-        this.x1 = new Point(x, y);
-        this.x2 = new Point(x + w, y + h);
+        this.x1 = new Point(x1, y1);
+        this.x2 = new Point(x2 , y2 );
         currentState = State.WAKE;
         run();
     }
@@ -132,8 +132,13 @@ public class Sensor extends UnicastRemoteObject implements SensorInterface {
             SRI.register(this);
             System.out.println("Region 1");
 
-            Registry r = LocateRegistry.createRegistry(1236);
+            try {
+                Registry r = LocateRegistry.createRegistry(1236);
+            } catch (Exception ex) {
+            }
+
             String sensorname = "rmi://localhost:1236/Sensor" + this.index;
+            System.out.println("rebind " + sensorname);
             Naming.rebind(sensorname, this);
 //            Scanner sc = new Scanner(System.in);
 //            
