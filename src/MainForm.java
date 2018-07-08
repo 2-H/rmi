@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -43,6 +44,7 @@ public class MainForm extends javax.swing.JFrame {
         frm = this;
 
         tbSensors.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
             public void valueChanged(ListSelectionEvent event) {
                 // do some actions here, for example
                 // print first column value from selected row
@@ -107,6 +109,9 @@ public class MainForm extends javax.swing.JFrame {
         jLabel15 = new javax.swing.JLabel();
         comboMod = new javax.swing.JComboBox<>();
         buttonMod = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        btnRestart = new javax.swing.JButton();
+        btnStop = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -174,7 +179,12 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
+        imageregion.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         imageregion.setText(".");
+        imageregion.setToolTipText("");
+        imageregion.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        imageregion.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
+        imageregion.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         imagelabel1.setText(".");
 
@@ -198,13 +208,27 @@ public class MainForm extends javax.swing.JFrame {
 
         jLabel15.setText("Status");
 
-        comboMod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Wake", "StandBy", "Stopped" }));
+        comboMod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Wake", "StandBy" }));
         comboMod.setEnabled(false);
 
         buttonMod.setText("Modify");
         buttonMod.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonModActionPerformed(evt);
+            }
+        });
+
+        btnRestart.setText("Restart");
+        btnRestart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRestartActionPerformed(evt);
+            }
+        });
+
+        btnStop.setText("Stop");
+        btnStop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnStopActionPerformed(evt);
             }
         });
 
@@ -215,152 +239,167 @@ public class MainForm extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtsensorx1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtsensory1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtsensorx2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtsensory2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(comboParent, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton2)
+                        .addContainerGap(629, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(x1Mod, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel11))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(y1Mod, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel12))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(x2Mod, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel13))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(y2Mod, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel14))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(32, 32, 32)
-                                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(x1Mod, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel11))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(jLabel12)
-                                            .addComponent(y1Mod, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(6, 6, 6)
-                                        .addComponent(jLabel7))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(x2Mod, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel13))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(y2Mod, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel14))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel15)
-                                            .addComponent(comboMod, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(jLabel15)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(txtregionx1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(comboMod, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtregiony1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtregionx2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel6)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(txtregiony2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jButton3)))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buttonMod)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(imageregion, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                                .addComponent(buttonMod, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtsensorx1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtsensory1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtsensorx2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtsensory2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel5))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(layout.createSequentialGroup()
+                                                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addGap(32, 32, 32)
+                                                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addGap(32, 32, 32)
+                                                    .addComponent(jLabel7))
+                                                .addGroup(layout.createSequentialGroup()
+                                                    .addGap(148, 148, 148)
+                                                    .addComponent(jLabel6))
+                                                .addGroup(layout.createSequentialGroup()
+                                                    .addComponent(txtregionx1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addComponent(txtregiony1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addComponent(txtregionx2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                    .addComponent(txtregiony2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addComponent(jButton3)))
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(imageregion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 672, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(comboParent, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 167, Short.MAX_VALUE)
-                                        .addComponent(jButton2)))
-                                .addGap(61, 61, 61))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 672, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addComponent(imagelabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                                        .addComponent(btnRestart)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnStop)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(imagelabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(77, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel10))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtsensorx1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtsensory1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtsensorx2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtsensory2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2)
-                    .addComponent(comboParent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(31, 31, 31)
+                        .addComponent(jButton2))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(5, 5, 5)
-                        .addComponent(imagelabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel11)
-                    .addComponent(jLabel12)
-                    .addComponent(jLabel13)
-                    .addComponent(jLabel14)
-                    .addComponent(jLabel15))
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel10))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtsensorx1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtsensory1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtsensorx2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtsensory2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(comboParent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(x1Mod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(y1Mod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(x2Mod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(y2Mod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(comboMod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonMod))
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel9))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtregionx1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtregiony1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtregionx2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtregiony2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton3)))
-                    .addComponent(imageregion, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(287, 287, 287)
+                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(jLabel11)
+                                            .addComponent(jLabel13)
+                                            .addComponent(jLabel14)
+                                            .addComponent(jLabel15))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(x1Mod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(y1Mod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(x2Mod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(y2Mod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(comboMod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(buttonMod)))
+                                    .addComponent(jLabel12)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(btnRestart)
+                                            .addComponent(btnStop))))
+                                .addGap(38, 38, 38)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(jLabel8)
+                                            .addComponent(jLabel7)
+                                            .addComponent(jLabel6)
+                                            .addComponent(jLabel9))
+                                        .addGap(7, 7, 7)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(txtregionx1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtregiony1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtregionx2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtregiony2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jButton3)))
+                                    .addComponent(imageregion, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addComponent(imagelabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         txtsensorx1.getAccessibleContext().setAccessibleName("");
@@ -368,8 +407,31 @@ public class MainForm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void ShowImage(int index) throws IOException, RemoteException, NotBoundException, Exception {
+    private void changeControllerView() {
+        if (tbSensors.getSelectedRowCount() > 0) {
+            int r = tbSensors.getSelectedRow();
+            x1Mod.setText(tbSensors.getValueAt(r, 2).toString());
+            y1Mod.setText(tbSensors.getValueAt(r, 3).toString());
+            x2Mod.setText(tbSensors.getValueAt(r, 4).toString());
+            y2Mod.setText(tbSensors.getValueAt(r, 5).toString());
+            String state = tbSensors.getValueAt(r, 6).toString();
+            if (state.equalsIgnoreCase("wake")) {
+                comboMod.setSelectedIndex(0);
+            } else if (state.equalsIgnoreCase("standby")) {
+                comboMod.setSelectedIndex(1);
+            }
+        }
+    }
 
+    private void ShowImage(int index) throws IOException, RemoteException, NotBoundException, Exception {
+        SupervisorInterface SRI = (SupervisorInterface) Naming.lookup(bindingString);
+        ArrayList<Integer> waitingSensors = SRI.getWaitingSensors();
+        if (waitingSensors.contains(index)
+                || (tbSensors.getSelectedRowCount() > 0 && !tbSensors.getValueAt(tbSensors.getSelectedRow(), 6).toString().equals("Wake"))) {
+            imagelabel1.setIcon(null);
+            //changeControllerView();
+            return;
+        }
         SensorInterface sn = (SensorInterface) Naming.lookup("rmi://localhost:1236/Sensor" + index);
         SensorData sd = sn.getSensorData();
 
@@ -391,21 +453,7 @@ public class MainForm extends javax.swing.JFrame {
                 return 400;
             }
         });
-        if (tbSensors.getSelectedRowCount() > 0) {
-            int r = tbSensors.getSelectedRow();
-            x1Mod.setText(tbSensors.getValueAt(r, 2).toString());
-            y1Mod.setText(tbSensors.getValueAt(r, 3).toString());
-            x2Mod.setText(tbSensors.getValueAt(r, 4).toString());
-            y2Mod.setText(tbSensors.getValueAt(r, 5).toString());
-            String state = tbSensors.getValueAt(r, 6).toString();
-            if (state.equalsIgnoreCase("wake")) {
-                comboMod.setSelectedIndex(0);
-            } else if (state.equalsIgnoreCase("standby")) {
-                comboMod.setSelectedIndex(1);
-            } else if (state.equalsIgnoreCase("stopped")) {
-                comboMod.setSelectedIndex(2);
-            }
-        }
+        changeControllerView();
     }
 
     private void modify(int rowNumber, int x1, int y1, int x2, int y2, String state) {
@@ -460,11 +508,13 @@ public class MainForm extends javax.swing.JFrame {
                 }
 
                 refreshTable();
-
+                txtsensorx1.setText("");
+                txtsensorx2.setText("");
+                txtsensory1.setText("");
+                txtsensory2.setText("");
             }
         } catch (Exception ex) {
-            Logger.getLogger(MainForm.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error while creating a sensor.\n" + ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         //Add to comboBox
 
@@ -474,8 +524,17 @@ public class MainForm extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         SupervisorInterface SRI;
         try {
+            ShowImageRegion(null);
             SRI = (SupervisorInterface) Naming.lookup(bindingString);
-            ArrayList<SensorInterface> lst = SRI.getSensors();
+            ArrayList<SensorInterface> allSensors = SRI.getSensors();
+            ArrayList<Integer> waitingSensors = SRI.getWaitingSensors();
+            //waiting sensors must not be able to view
+            ArrayList<SensorInterface> lst = new ArrayList<>();
+            for (SensorInterface s : allSensors) {
+                if (!waitingSensors.contains(s.getSensorData().index)) {
+                    lst.add(s);
+                }
+            }
             int x1 = Integer.parseInt(txtregionx1.getText());
             int y1 = Integer.parseInt(txtregiony1.getText());
             int x2 = Integer.parseInt(txtregionx2.getText());
@@ -566,8 +625,7 @@ public class MainForm extends javax.swing.JFrame {
                  */
             }
         } catch (Exception ex) {
-            Logger.getLogger(MainForm.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Failed to preview region." + "\n" + ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jButton3ActionPerformed
     private void controllerSwitch(boolean val) {
@@ -583,41 +641,151 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_comboParentActionPerformed
 
     private void buttonModActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonModActionPerformed
+        if (tbSensors.getSelectedRowCount() < 1) {
+            JOptionPane.showMessageDialog(null, "No row is selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (!tbSensors.getValueAt(tbSensors.getSelectedRow(), 6).toString().equalsIgnoreCase("wake")) {
+            JOptionPane.showMessageDialog(null, "Sensor must be in wake status to be modified.", "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         controllerSwitch(true);
         int sensorId;
         if (buttonMod.getText().equalsIgnoreCase("modify")) {
             buttonMod.setText("Accept");
+            return;
+        } //else if (buttonMod.getText().equalsIgnoreCase("accept")) {
+        try {
 
-        } else if (buttonMod.getText().equalsIgnoreCase("accept")) {
-            try {
-
-                sensorId = (int) tbSensors.getValueAt(tbSensors.getSelectedRow(), 1);
-                int newX1 = Integer.parseInt(x1Mod.getText());
-                int newY1 = Integer.parseInt(y1Mod.getText());
-                int newX2 = Integer.parseInt(x2Mod.getText());
-                int newY2 = Integer.parseInt(y2Mod.getText());
-                if (newX1 >= newX2 || newY1 >= newY2) {
-                    JOptionPane.showMessageDialog(null, "please ensure : x1<x2 and y1<y2");
-                    return;
+            sensorId = (int) tbSensors.getValueAt(tbSensors.getSelectedRow(), 1);
+            int newX1 = Integer.parseInt(x1Mod.getText());
+            int newY1 = Integer.parseInt(y1Mod.getText());
+            int newX2 = Integer.parseInt(x2Mod.getText());
+            int newY2 = Integer.parseInt(y2Mod.getText());
+            int newState = comboMod.getSelectedIndex();
+            if (newX1 >= newX2 || newY1 >= newY2) {
+                JOptionPane.showMessageDialog(null, "please ensure : x1<x2 and y1<y2");
+                return;
+            }
+            SupervisorInterface SRI = (SupervisorInterface) Naming.lookup(bindingString);
+            ArrayList<SensorInterface> arr = SRI.getSensors();
+            for (SensorInterface s : arr) {
+                if (s.getSensorData().index == sensorId) {
+                    s.configureRegion(new Point(newX1, newY1), new Point(newX2, newY2));
+                    if (newState == 0) {
+                        SRI.removeFromWaiting(s.getSensorData().index);
+                        synchronized (s) {
+                            s.notify();
+                        }
+                    } else if (newState == 1) {
+                        SRI.addToWaiting(s.getSensorData().index);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                synchronized (s) {
+                                    try {
+                                        s.wait();
+                                    } catch (InterruptedException ex) {
+                                        System.out.println("Fatal error: " + ex.toString());
+                                    }
+                                }
+                            }
+                        }).start();
+                    }
+                    break;
                 }
-                SupervisorInterface SRI = (SupervisorInterface) Naming.lookup(bindingString);
-                ArrayList<SensorInterface> arr = SRI.getSensors();
-                for (SensorInterface s : arr) {
-                    if (s.getSensorData().index == sensorId) {
-                        s.configureRegion(new Point(newX1, newY1), new Point(newX2, newY2));
-                        break;
+            }
+            modify(tbSensors.getSelectedRows()[0], newX1, newY1, newX2, newY2, (newState == 0) ? "Wake" : "StandBy");
+            controllerSwitch(false);
+            buttonMod.setText("Modify");
+            ShowImage(sensorId);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "An error occured while trying to modify.\n" + ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        //}
+    }//GEN-LAST:event_buttonModActionPerformed
+
+    private void btnRestartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestartActionPerformed
+        if (tbSensors.getSelectedRowCount() < 1) {
+            JOptionPane.showMessageDialog(null, "No row is selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (tbSensors.getValueAt(tbSensors.getSelectedRow(), 6).toString().equalsIgnoreCase("stopped")) {
+            JOptionPane.showMessageDialog(null, "Sensor is no more usable.", "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (tbSensors.getRowCount() > 0) {
+            try {
+                int index = (int) tbSensors.getValueAt(tbSensors.getSelectedRow(), 1);
+                SensorInterface s = (SensorInterface) Naming.lookup("rmi://localhost:1236/Sensor" + index);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            tbSensors.setValueAt("Restarting...", tbSensors.getSelectedRow(), 6);
+                            s.changeState(4);
+                            Thread.sleep(1000);
+                            tbSensors.setValueAt("Wake", tbSensors.getSelectedRow(), 6);
+                        } catch (InterruptedException | RemoteException ex) {
+                            System.out.println("Fatal error: " + ex.toString());
+                        }
+                    }
+                }).start();
+                //s.changeState(4);
+                synchronized (this) {
+                    this.wait(1000);
+                }
+            } catch (MalformedURLException | NotBoundException | RemoteException | InterruptedException ex) {
+                System.out.println("Fatal error: " + ex.toString());
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Error while trying to restart.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+    }//GEN-LAST:event_btnRestartActionPerformed
+
+    private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopActionPerformed
+        if (tbSensors.getSelectedRowCount() < 1) {
+            JOptionPane.showMessageDialog(null, "No row is selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        try {
+            int index = (int) tbSensors.getValueAt(tbSensors.getSelectedRow(), 1);
+            SensorInterface s = (SensorInterface) Naming.lookup("rmi://localhost:1236/Sensor" + index);
+            SupervisorInterface SRI = (SupervisorInterface) Naming.lookup(bindingString);
+            ArrayList<Integer> childrenIndexes = SRI.removeSensor(index);
+            if (childrenIndexes != null && !childrenIndexes.isEmpty()) {
+                for (int i = 0; i < tbSensors.getRowCount(); i++) {
+                    int tmp = (int) tbSensors.getValueAt(i, 1);
+                    if (childrenIndexes.contains(tmp)) {
+                        tbSensors.setValueAt("NaN", i, 7);
                     }
                 }
-                modify(tbSensors.getSelectedRows()[0], newX1, newY1, newX2, newY2, "Wake");
-                controllerSwitch(false);
-                buttonMod.setText("Modify");
-                ShowImage(sensorId);
-            } catch (Exception ex) {
-                Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            } else {
+                tbSensors.setValueAt("NaN", tbSensors.getSelectedRow(), 7);
             }
-
+            tbSensors.setValueAt("Stopped", tbSensors.getSelectedRow(), 6);
+            updateComboParents();
+            ShowImage(index);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error while trying to stop.\n" + ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_buttonModActionPerformed
+    }//GEN-LAST:event_btnStopActionPerformed
+
+    private void updateComboParents() {
+        try {
+            SupervisorInterface SRI = (SupervisorInterface) Naming.lookup(bindingString);
+            comboParent.removeAllItems();
+            comboParent.addItem("NaN");
+            for (int parent : SRI.getSecondTier().keySet()) {
+                comboParent.addItem(Integer.toString(parent));
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
 
     /**
      * @param args the command line arguments
@@ -658,10 +826,7 @@ public class MainForm extends javax.swing.JFrame {
             Thread.sleep(5000);
 
         } catch (InterruptedException ex) {
-            System.err.println(ex.getMessage());
-            Logger
-                    .getLogger(MainForm.class
-                            .getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         //}
     }
@@ -713,6 +878,8 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnRestart;
+    private javax.swing.JButton btnStop;
     private javax.swing.JButton buttonMod;
     private javax.swing.JComboBox<String> comboMod;
     private javax.swing.JComboBox<String> comboParent;
@@ -736,6 +903,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable tbSensors;
     private javax.swing.JTextField txtregionx1;
     private javax.swing.JTextField txtregionx2;

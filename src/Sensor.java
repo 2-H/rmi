@@ -32,16 +32,17 @@ public class Sensor extends UnicastRemoteObject implements SensorInterface {
     }
 
     enum State {
-        STANDBY, WAKE
+        StandBy, Wake
     };
 
     public Sensor(int x1, int y1, int x2, int y2, int parentIndex) throws RemoteException {
+        //super();
         Random rn = new Random();
         this.index = Math.abs(rn.nextInt()) % 500000000;
         this.x1 = new Point(x1, y1);
         this.x2 = new Point(x2, y2);
         this.parentIndex = parentIndex;
-        currentState = State.WAKE;
+        currentState = State.Wake;
         run();
     }
 
@@ -51,7 +52,7 @@ public class Sensor extends UnicastRemoteObject implements SensorInterface {
         this.index = Math.abs(rand.nextInt()) % 500000000;
         x1 = new Point(rand.nextInt(100), rand.nextInt(100));
         x2 = new Point(rand.nextInt(100), rand.nextInt(100));
-        currentState = State.WAKE;
+        currentState = State.Wake;
     }
 
     @Override
@@ -63,7 +64,7 @@ public class Sensor extends UnicastRemoteObject implements SensorInterface {
                 break;
             case 3: {//STOP
                 try {
-                    Naming.unbind("SensorRoom");
+                    Naming.unbind("Supervisor");
                     UnicastRemoteObject.unexportObject(SRI, true);
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
                     System.out.println("Fatal error: " + ex.getMessage());
@@ -71,26 +72,6 @@ public class Sensor extends UnicastRemoteObject implements SensorInterface {
                 exit(0);
             }
             break;
-            case 2: {//STANDBY
-                System.out.println("Waiting...");
-                currentState = State.STANDBY;
-                synchronized (this) {
-                    try {
-                        wait();
-                        System.out.println("Wait finished.");
-                    } catch (InterruptedException ex) {
-                        System.out.println("Fatal error: " + ex.toString());
-                    }
-                }
-                System.out.println("after waiting");
-            }
-            break;
-            case 1://WAKE
-                currentState = State.WAKE;
-                System.out.println("Waked.");
-                break;
-            default:
-                break;
         }
     }
 
@@ -173,7 +154,7 @@ public class Sensor extends UnicastRemoteObject implements SensorInterface {
     }
 
     public static void main(String[] args) throws RemoteException {
-        new Sensor().run();
+        //new Sensor().run();
     }
 
 }

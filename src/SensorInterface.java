@@ -19,5 +19,5 @@ public interface SensorInterface extends Remote {
     public String ping() throws RemoteException;
 
     public void setImgBytes(byte[] imgBytes) throws RemoteException;
-    
+
 }
