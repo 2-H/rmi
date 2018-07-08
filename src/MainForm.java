@@ -743,6 +743,10 @@ public class MainForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Sensor is no more usable.", "Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        if (tbSensors.getValueAt(tbSensors.getSelectedRow(), 6).toString().equalsIgnoreCase("standby")) {
+            JOptionPane.showMessageDialog(null, "Status must be wake to restart.", "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         if (tbSensors.getRowCount() > 0) {
             try {
                 int index = (int) tbSensors.getValueAt(tbSensors.getSelectedRow(), 1);
