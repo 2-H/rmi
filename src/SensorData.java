@@ -30,6 +30,15 @@ public class SensorData implements Serializable {
         this.parentIndex = parentIndex;
     }
 
+    public int getParentIndex() {
+        return parentIndex;
+    }
+
+    public void setParentIndex(int parentIndex) {
+        this.parentIndex = parentIndex;
+    }
+
+    
     @Override
     public int hashCode() {
         int hash = 7;

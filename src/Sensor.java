@@ -102,6 +102,16 @@ public class Sensor extends UnicastRemoteObject implements SensorInterface {
         return x2;
     }
 
+    @Override
+    public int getParentIndex() {
+        return parentIndex;
+    }
+
+    @Override
+    public void setParentIndex(int parentIndex) {
+        this.parentIndex = parentIndex;
+    }
+
     public void run() {
         //    System.setSecurityManager(new RMISecurityManager());
         try {

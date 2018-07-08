@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.stage.FileChooser;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.JFileChooser;
@@ -311,13 +310,10 @@ public class MainForm extends javax.swing.JFrame {
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(layout.createSequentialGroup()
                                             .addComponent(comboParent, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jButton2)
-                                            .addGap(0, 0, Short.MAX_VALUE))
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(0, 0, Short.MAX_VALUE)))
-                                    .addGap(230, 230, 230)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(jButton2))
+                                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(btnBrowse)
                                         .addComponent(lblFileName)))
@@ -357,10 +353,8 @@ public class MainForm extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(31, 31, 31)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton2)
-                            .addComponent(lblFileName)))
+                        .addGap(35, 35, 35)
+                        .addComponent(lblFileName))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -376,7 +370,8 @@ public class MainForm extends javax.swing.JFrame {
                             .addComponent(txtsensory1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtsensorx2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtsensory2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(comboParent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(comboParent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -517,7 +512,6 @@ public class MainForm extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
         try {
-
             int x1 = Integer.parseInt(txtsensorx1.getText());
             int y1 = Integer.parseInt(txtsensory1.getText());
             int x2 = Integer.parseInt(txtsensorx2.getText());
@@ -526,11 +520,15 @@ public class MainForm extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "please ensure : x1<x2 and y1<y2");
             } else {
                 String parentIndexString = String.valueOf(comboParent.getSelectedItem());
-                int parentIndex = !parentIndexString.equals("NaN") ? Integer.parseInt(parentIndexString) : -1;
+                int parentIndex;
+                if (!parentIndexString.equals("NaN")) {
+                    parentIndex = Integer.parseInt(parentIndexString);
+                } else {
+                    parentIndex = -1;
+                }
                 Sensor s = new Sensor(x1, y1, x2, y2, parentIndex);
                 try {
                     ShowImage(s.index);
-
                 } catch (Exception ex) {
                     Logger.getLogger(MainForm.class
                             .getName()).log(Level.SEVERE, null, ex);
@@ -570,7 +568,6 @@ public class MainForm extends javax.swing.JFrame {
             int y2 = Integer.parseInt(txtregiony2.getText());
             if (x1 >= x2 || y1 >= y2) {
                 JOptionPane.showMessageDialog(null, "please ensure : x1<x2 and y1<y2");
-
             } else {
                 BufferedImage dst = new BufferedImage(x2 - x1, y2 - y1, BufferedImage.TYPE_INT_ARGB);
                 int index = 0;
@@ -707,7 +704,9 @@ public class MainForm extends javax.swing.JFrame {
                             s.notify();
                         }
                     } else if (newState == 1) {
-                        SRI.addToWaiting(s.getSensorData().index);
+                        if (!SRI.getWaitingSensors().contains(s.getSensorData().index)) {
+                            SRI.addToWaiting(s.getSensorData().index);
+                        }
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -781,7 +780,6 @@ public class MainForm extends javax.swing.JFrame {
         }
         try {
             int index = (int) tbSensors.getValueAt(tbSensors.getSelectedRow(), 1);
-            SensorInterface s = (SensorInterface) Naming.lookup("rmi://localhost:1236/Sensor" + index);
             SupervisorInterface SRI = (SupervisorInterface) Naming.lookup(bindingString);
             ArrayList<Integer> childrenIndexes = SRI.removeSensor(index);
             if (childrenIndexes != null && !childrenIndexes.isEmpty()) {
@@ -811,7 +809,7 @@ public class MainForm extends javax.swing.JFrame {
                 selectedFile = jfc.getSelectedFile();
                 System.out.println(selectedFile.getAbsolutePath());
             }
-            String path = selectedFile.getAbsolutePath();
+            String path = selectedFile.getAbsolutePath() ;
             String ext = path.substring(path.lastIndexOf(".") + 1);
             if (!ext.equals("jpg") && !ext.equals("jpeg") && !ext.equals("png")) {
                 JOptionPane.showMessageDialog(null, "Unsupported extension.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -875,9 +873,9 @@ public class MainForm extends javax.swing.JFrame {
                 Logger.getLogger(MainForm.class
                         .getName()).log(Level.SEVERE, null, ex);
             }
-            Thread.sleep(5000);
+            //Thread.sleep(5000);
 
-        } catch (InterruptedException ex) {
+        } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         //}
@@ -916,9 +914,9 @@ public class MainForm extends javax.swing.JFrame {
         //</editor-fold>
         /* Create and display the form */
         try {
-            SupervisorInterface SRI = (SupervisorInterface) Naming.lookup("rmi://localhost:1234/Supervisor");
-            DataServerHost DSH = (DataServerHost) Naming.lookup("rmi://localhost:1235/DataServer");
-        } catch (Exception ex) {
+            Naming.lookup("rmi://localhost:1234/Supervisor");
+            Naming.lookup("rmi://localhost:1235/DataServer");
+        } catch (MalformedURLException | NotBoundException | RemoteException ex) {
             JOptionPane.showMessageDialog(null, "Error while trying to connect to servers.\n" + ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }

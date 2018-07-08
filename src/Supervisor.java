@@ -168,8 +168,10 @@ public class Supervisor extends UnicastRemoteObject implements SupervisorInterfa
                 return null;
             }
             for (SensorInterface tmp : children) {
+                tmp.setParentIndex(-1);          
                 secondTier.put(tmp.getSensorData().index, tmp);
                 childrenIndexes.add(tmp.getSensorData().index);
+                System.out.println("index: " + tmp.getSensorData().index + " parent: " + tmp.getSensorData().parentIndex);
             }
             baseTier.remove(s);
             secondTier.remove(index);
@@ -177,10 +179,11 @@ public class Supervisor extends UnicastRemoteObject implements SupervisorInterfa
             return childrenIndexes;
         } else {
             System.out.println("HERE 2");
-            for (ArrayList<SensorInterface> tmp : baseTier.values()) {
-                for (SensorInterface t : tmp) {
-                    if (t.getSensorData().index == index) {
-                        tmp.remove(t);
+            for (SensorInterface tmp : baseTier.keySet()) {
+                ArrayList<SensorInterface> arr = baseTier.get(tmp);
+                for (SensorInterface si : arr) {
+                    if (si.getSensorData().index == index) {
+                        arr.remove(si);
                         Naming.unbind("rmi://localhost:1236/Sensor" + index);
                         return null;
                     }
