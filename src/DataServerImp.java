@@ -22,8 +22,20 @@ import javax.imageio.ImageIO;
  */
 public class DataServerImp extends UnicastRemoteObject implements DataServerHost {
 
+    String imagePath = "java.jpg";
+
     public DataServerImp() throws RemoteException {
         super();
+    }
+
+    @Override
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    @Override
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     @Override
@@ -32,7 +44,7 @@ public class DataServerImp extends UnicastRemoteObject implements DataServerHost
         try {
             System.out.println("getImage from Data Server " + x1);
 
-            src = ImageIO.read(new File("java.jpg"));
+            src = ImageIO.read(new File(imagePath));
             int w = Math.abs(x2 - x1);
             int h = Math.abs(y2 - y1);
             BufferedImage dst = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
