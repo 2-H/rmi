@@ -117,6 +117,7 @@ public class MainForm extends javax.swing.JFrame {
         btnRestart = new javax.swing.JButton();
         btnStop = new javax.swing.JButton();
         btnBrowse = new javax.swing.JButton();
+        lblFileName = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -246,6 +247,8 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
+        lblFileName.setText("java.jpg");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -315,7 +318,9 @@ public class MainForm extends javax.swing.JFrame {
                                             .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addGap(0, 0, Short.MAX_VALUE)))
                                     .addGap(230, 230, 230)
-                                    .addComponent(btnBrowse))
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(btnBrowse)
+                                        .addComponent(lblFileName)))
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -353,7 +358,9 @@ public class MainForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(31, 31, 31)
-                        .addComponent(jButton2))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton2)
+                            .addComponent(lblFileName)))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -667,8 +674,8 @@ public class MainForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "No row is selected.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (!tbSensors.getValueAt(tbSensors.getSelectedRow(), 6).toString().equalsIgnoreCase("wake")) {
-            JOptionPane.showMessageDialog(null, "Sensor must be in wake status to be modified.", "Warning", JOptionPane.WARNING_MESSAGE);
+        if (tbSensors.getValueAt(tbSensors.getSelectedRow(), 6).toString().equalsIgnoreCase("stopped")) {
+            JOptionPane.showMessageDialog(null, "Sensor is no more usable.", "Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
         controllerSwitch(true);
@@ -810,6 +817,7 @@ public class MainForm extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Unsupported extension.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            lblFileName.setText(selectedFile.getName());
             DataServerHost ds = (DataServerHost) Naming.lookup("rmi://localhost:1235/DataServer");
             ds.setImagePath(path);
         } catch (HeadlessException | MalformedURLException | NotBoundException | RemoteException ex) {
@@ -956,6 +964,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel lblFileName;
     private javax.swing.JTable tbSensors;
     private javax.swing.JTextField txtregionx1;
     private javax.swing.JTextField txtregionx2;
