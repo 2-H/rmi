@@ -1,8 +1,11 @@
 
 import static java.lang.System.exit;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
+import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -17,11 +20,17 @@ public class Sensor extends UnicastRemoteObject implements SensorInterface {
     SupervisorInterface SRI;
     String bindingString;
     byte[] imgBytes;
+    String dataServerIP, supervisorIP;
+
+    enum State {
+        StandBy, Wake
+    };
 
     @Override
     public SensorData getSensorData() throws Exception {
+        System.out.println("Sensor.getSensorData() " + dataServerIP + ":1235/DataServer");
         DataServerHost ds;
-        ds = (DataServerHost) Naming.lookup("rmi://localhost:1235/DataServer");
+        ds = (DataServerHost) Naming.lookup("rmi://" + dataServerIP + ":1235/DataServer");
         imgBytes = ds.getImage(x1.x, x1.y, x2.x, x2.y);
         return new SensorData(this.index, x1, x2, currentState.toString(), imgBytes, parentIndex);
     }
@@ -31,18 +40,26 @@ public class Sensor extends UnicastRemoteObject implements SensorInterface {
         return "I am alive " + this.index;
     }
 
-    enum State {
-        StandBy, Wake
-    };
+    @Override
+    public String getIP() throws RemoteException {
+        try {
+            return InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException ex) {
+            System.out.println("Fatal error: " + ex.toString());;
+        }
+        return null;
+    }
 
-    public Sensor(int x1, int y1, int x2, int y2, int parentIndex) throws RemoteException {
-        //super();
+    public Sensor(int x1, int y1, int x2, int y2, int parentIndex, String supervisorIP, String dataServerIP) throws RemoteException, UnknownHostException {
+        super();
         Random rn = new Random();
         this.index = Math.abs(rn.nextInt()) % 500000000;
         this.x1 = new Point(x1, y1);
         this.x2 = new Point(x2, y2);
         this.parentIndex = parentIndex;
         currentState = State.Wake;
+        this.supervisorIP = supervisorIP;
+        this.dataServerIP = dataServerIP;
         run();
     }
 
@@ -71,7 +88,16 @@ public class Sensor extends UnicastRemoteObject implements SensorInterface {
                 }
                 exit(0);
             }
-            break;
+            case 2: {//StandBy
+                currentState = State.StandBy;
+                break;
+            }
+            case 1: {//Wake
+                currentState = State.Wake;
+                break;
+            }
+            default:
+                break;
         }
     }
 
@@ -112,22 +138,25 @@ public class Sensor extends UnicastRemoteObject implements SensorInterface {
         this.parentIndex = parentIndex;
     }
 
-    public void run() {
-        //    System.setSecurityManager(new RMISecurityManager());
+    public void run() throws UnknownHostException {
         try {
-            bindingString = "rmi://localhost:1234/Supervisor";//SensorRoom
+            System.setSecurityManager(new RMISecurityManager());
+
+            bindingString = "rmi://" + supervisorIP + ":1234/Supervisor";//SensorRoom
             SupervisorInterface SRI = (SupervisorInterface) Naming.lookup(bindingString);
             SRI.register(this);
             System.out.println("Region 1");
-
+            Registry r;
             try {
-                Registry r = LocateRegistry.createRegistry(1236);
+                r = LocateRegistry.createRegistry(1236);
             } catch (Exception ex) {
+                r = LocateRegistry.getRegistry(1236);
             }
+            System.out.println("rebind " + this.index);
 
-            String sensorname = "rmi://localhost:1236/Sensor" + this.index;
-            System.out.println("rebind " + sensorname);
-            Naming.rebind(sensorname, this);
+            //String sensorname = "rmi://" + InetAddress.getLocalHost().getHostAddress() + ":1236/Sensor" + this.index;
+            //System.out.println("rebind " + sensorname);
+            r.rebind("Sensor" + this.index, this);
 //            Scanner sc = new Scanner(System.in);
 //            
 //            System.out.println("Enter x , y , width , height :");

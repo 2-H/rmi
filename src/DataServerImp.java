@@ -10,6 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -60,6 +61,8 @@ public class DataServerImp extends UnicastRemoteObject implements DataServerHost
     }
 
     public static void main(String[] args) throws RemoteException, MalformedURLException {
+        System.setSecurityManager(new RMISecurityManager());
+
         Registry r = LocateRegistry.createRegistry(1235);
         DataServerImp ds = new DataServerImp();
         //ds.getImage(300, 200, 500,700);        

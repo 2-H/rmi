@@ -1,5 +1,7 @@
 
+import java.net.InetAddress;
 import java.rmi.Naming;
+import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -15,6 +17,7 @@ public class Supervisor extends UnicastRemoteObject implements SupervisorInterfa
     ArrayList<SensorInterface> ListOfSensorsReference;
     HashMap<Integer, SensorInterface> secondTier;
     HashMap<SensorInterface, ArrayList<SensorInterface>> baseTier;
+    HashMap<Integer, String> ipGetter;
     ArrayList<Integer> waitingSensors;
     Scanner keyboard;
     int imgWidth, imgHeight;
@@ -26,6 +29,7 @@ public class Supervisor extends UnicastRemoteObject implements SupervisorInterfa
         secondTier = new HashMap<>();
         baseTier = new HashMap<>();
         waitingSensors = new ArrayList<>();
+        ipGetter = new HashMap<>();
         keyboard = new Scanner(System.in);
     }
 
@@ -47,6 +51,7 @@ public class Supervisor extends UnicastRemoteObject implements SupervisorInterfa
                 System.out.println("temple: " + parent.getSensorData().index);
                 System.out.println("\t" + baseTier.get(parent).get(0).getSensorData().index);
             }
+            ipGetter.put(sd.index, SI.getIP());
         } catch (Exception ex) {
             Logger.getLogger(Supervisor.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -152,30 +157,31 @@ public class Supervisor extends UnicastRemoteObject implements SupervisorInterfa
     }
 
     @Override
-    public ArrayList<Integer> removeSensor(int index) throws RemoteException, Exception {
+    public ArrayList<Integer> removeSensor(int index, String ip) throws RemoteException, Exception {
         SensorInterface s;
         ArrayList<SensorInterface> children;
         ArrayList<Integer> childrenIndexes = new ArrayList<>();
         // in case a child sensor -> remove only the sensor
         // in case a parent sensor -> children of deleted sensor become a parent
+        String bindingString = "rmi://" + ip + ":1236/Sensor" + index;
         if (secondTier.containsKey(index)) {
             s = secondTier.get(index);
             System.out.println("index: " + s.getSensorData().index + "\t" + baseTier.keySet().contains(s));
             children = baseTier.get(s);
             if (children == null) {
                 secondTier.remove(index);
-                Naming.unbind("rmi://localhost:1236/Sensor" + index);
+                Naming.unbind(bindingString);
                 return null;
             }
             for (SensorInterface tmp : children) {
-                tmp.setParentIndex(-1);          
+                tmp.setParentIndex(-1);
                 secondTier.put(tmp.getSensorData().index, tmp);
                 childrenIndexes.add(tmp.getSensorData().index);
                 System.out.println("index: " + tmp.getSensorData().index + " parent: " + tmp.getSensorData().parentIndex);
             }
             baseTier.remove(s);
             secondTier.remove(index);
-            Naming.unbind("rmi://localhost:1236/Sensor" + index);
+            Naming.unbind(bindingString);
             return childrenIndexes;
         } else {
             System.out.println("HERE 2");
@@ -184,19 +190,20 @@ public class Supervisor extends UnicastRemoteObject implements SupervisorInterfa
                 for (SensorInterface si : arr) {
                     if (si.getSensorData().index == index) {
                         arr.remove(si);
-                        Naming.unbind("rmi://localhost:1236/Sensor" + index);
+                        Naming.unbind(bindingString);
                         return null;
                     }
                 }
             }
         }
         System.out.println(baseTier + "\n" + secondTier);
-        Naming.unbind("rmi://localhost:1236/Sensor" + index);
+        Naming.unbind(bindingString);
         return null;
     }
 
     public static void main(String[] args) throws InterruptedException {
         try {
+            System.setSecurityManager(new RMISecurityManager());
             Registry r = LocateRegistry.createRegistry(1234);
             Supervisor theSupervisor = new Supervisor();
             r.rebind("Supervisor", theSupervisor);
@@ -238,5 +245,10 @@ public class Supervisor extends UnicastRemoteObject implements SupervisorInterfa
     @Override
     public void removeFromWaiting(Integer index) throws RemoteException {
         waitingSensors.remove(index);
+    }
+
+    @Override
+    public String getSensorIP(int index) throws RemoteException {
+        return ipGetter.get(index);
     }
 }

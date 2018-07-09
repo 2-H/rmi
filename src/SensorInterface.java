@@ -24,4 +24,6 @@ public interface SensorInterface extends Remote {
     
     public int getParentIndex() throws RemoteException;
 
+    public String getIP() throws RemoteException;
+
 }
