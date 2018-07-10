@@ -1,15 +1,6 @@
 
 import java.io.Serializable;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- *
- * @author Ali Al-Jobouri
- */
 public class SensorData implements Serializable {
 
     public Point x1;
@@ -38,7 +29,6 @@ public class SensorData implements Serializable {
         this.parentIndex = parentIndex;
     }
 
-    
     @Override
     public int hashCode() {
         int hash = 7;

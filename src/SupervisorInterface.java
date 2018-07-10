@@ -20,8 +20,10 @@ public interface SupervisorInterface extends Remote {
 
     public void removeFromWaiting(Integer index) throws RemoteException;
 
-    public ArrayList<Integer> removeSensor(int index, String ip) throws RemoteException, Exception;
+    public void removeSensor(int index, String ip) throws RemoteException, Exception;
     
     public String getSensorIP(int index) throws RemoteException;
+    
+    public void balanceKids() throws RemoteException;
 
 }

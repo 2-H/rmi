@@ -1,13 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- *
- * @author Ali Al-Jobouri
- */
 public class Rect {
 
     double x, y, width, height;
@@ -26,7 +17,9 @@ public class Rect {
         double newWidth = Math.min(this.x + this.width, rect2.x + rect2.width) - newX;
         double newHeight = Math.min(this.y + this.height, rect2.y + rect2.height) - newY;
 
-        if (newWidth <= 0d || newHeight <= 0d) return null;
+        if (newWidth <= 0d || newHeight <= 0d) {
+            return null;
+        }
 
         return new Rect(newX, newY, newWidth, newHeight);
     }

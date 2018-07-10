@@ -1,7 +1,6 @@
 
 import java.net.InetAddress;
 import java.rmi.Naming;
-import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -14,7 +13,6 @@ import java.util.logging.Logger;
 
 public class Supervisor extends UnicastRemoteObject implements SupervisorInterface {
 
-    ArrayList<SensorInterface> ListOfSensorsReference;
     HashMap<Integer, SensorInterface> secondTier;
     HashMap<SensorInterface, ArrayList<SensorInterface>> baseTier;
     HashMap<Integer, String> ipGetter;
@@ -25,7 +23,6 @@ public class Supervisor extends UnicastRemoteObject implements SupervisorInterfa
 
     public Supervisor() throws RemoteException {
         super();
-        ListOfSensorsReference = new ArrayList<>();
         secondTier = new HashMap<>();
         baseTier = new HashMap<>();
         waitingSensors = new ArrayList<>();
@@ -39,26 +36,22 @@ public class Supervisor extends UnicastRemoteObject implements SupervisorInterfa
             SensorData sd = SI.getSensorData();
             if (sd.parentIndex == -1) {
                 secondTier.put(sd.index, SI);
-                System.out.println("HERE 1: " + sd.parentIndex);
+                baseTier.put(SI, new ArrayList<>());
             } else {
                 SensorInterface parent = secondTier.get(sd.parentIndex);
-                System.out.println("HERE 2: " + parent.getSensorData().index);
                 if (baseTier.get(parent) == null) {
                     ArrayList<SensorInterface> arr = new ArrayList<>();
                     baseTier.put(parent, arr);
                 }
                 baseTier.get(parent).add(SI);
-                System.out.println("temple: " + parent.getSensorData().index);
-                System.out.println("\t" + baseTier.get(parent).get(0).getSensorData().index);
             }
             ipGetter.put(sd.index, SI.getIP());
         } catch (Exception ex) {
-            Logger.getLogger(Supervisor.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Fatal error: " + ex.toString());
         }
     }
 
     @Override
-
     public ArrayList<Integer> getWaitingSensors() {
         return waitingSensors;
     }
@@ -68,148 +61,39 @@ public class Supervisor extends UnicastRemoteObject implements SupervisorInterfa
         this.waitingSensors = waitingSensors;
     }
 
-    public void configureRegion(int sensorNbr) throws RemoteException {
-        Point x1 = new Point();
-        Point x2 = new Point();
-        System.out.print("Enter new x1 x: ");
-        x1.setX(keyboard.nextInt());
-        System.out.print("Enter new x1 y: ");
-        x1.setY(keyboard.nextInt());
-        System.out.print("Enter new x2 x: ");
-        x2.setX(keyboard.nextInt());
-        System.out.print("Enter new x2 y: ");
-        x2.setY(keyboard.nextInt());
-        ListOfSensorsReference.get(sensorNbr).configureRegion(x1, x2);
-        System.out.println("Sensor configured successfully.");
-    }
-
-    public void changeState(int sensorNbr) throws RemoteException, InterruptedException {
-        int choice;
-        System.out.print("[1]:Wake\n[2]:Stand by\n[3]:Stop\n[4]:Restart\nYour choice: ");
-        choice = keyboard.nextInt();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ListOfSensorsReference.get(sensorNbr).changeState(choice);
-                    if (choice == 1) {
-                        synchronized (ListOfSensorsReference.get(sensorNbr)) {
-                            ListOfSensorsReference.get(sensorNbr).notify();
-                        }
-                    }
-                    if (choice == 3) {
-                        ListOfSensorsReference.remove(sensorNbr);
-                        System.out.println("Sensor removed.");
-                    }
-                } catch (Exception ex) {
-                    System.out.println("Fatal error: " + ex.toString());
-                }
-            }
-        }).start();
-        System.out.println("Status changed successfully.");
-    }
-
-    public void showDescription(int sensorNbr) throws RemoteException {
-        System.out.println("Region: x1 = (" + ListOfSensorsReference.get(sensorNbr).getX1().getX() + ", "
-                + ListOfSensorsReference.get(sensorNbr).getX1().getY() + ") x2 = ("
-                + ListOfSensorsReference.get(sensorNbr).getX2().getX() + ", "
-                + ListOfSensorsReference.get(sensorNbr).getX2().getY() + ")");
-        System.out.println("Current state: " + ListOfSensorsReference.get(sensorNbr).getState());
-
-    }
-
-    public void generator() throws RemoteException, InterruptedException {
-        int choice, sensorNbr;
-        while (true) {
-            System.out.print("[1]Configure Region\n[2]Change state\n[3]Show Description\nYour choice: ");
-            choice = keyboard.nextInt();
-            System.out.print("Enter sensor number [0->" + (ListOfSensorsReference.size() - 1) + "]: ");
-            sensorNbr = keyboard.nextInt();
-            switch (choice) {
-                case 1:
-                    configureRegion(sensorNbr);
-                    break;
-                case 2:
-                    changeState(sensorNbr);
-                    break;
-                case 3:
-                    showDescription(sensorNbr);
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-    public void distributeRegions() throws RemoteException {
-        int val = imgWidth / ListOfSensorsReference.size(), tmp = 0;
-        for (int i = 0; i < ListOfSensorsReference.size(); i++) {
-            Point x1 = new Point(tmp, 0);
-            Point x2;
-            if (i == ListOfSensorsReference.size() - 1) {
-                x2 = new Point(val * i + overlap, imgHeight);
-            } else {
-                x2 = new Point(val * i, imgHeight);
-            }
-            ListOfSensorsReference.get(i).configureRegion(x1, x2);
-            tmp += val;
-        }
-    }
-
     @Override
-    public ArrayList<Integer> removeSensor(int index, String ip) throws RemoteException, Exception {
+    public void removeSensor(int index, String ip) throws RemoteException, Exception {
         SensorInterface s;
         ArrayList<SensorInterface> children;
-        ArrayList<Integer> childrenIndexes = new ArrayList<>();
         // in case a child sensor -> remove only the sensor
         // in case a parent sensor -> children of deleted sensor become a parent
-        String bindingString = "rmi://" + ip + ":1236/Sensor" + index;
         if (secondTier.containsKey(index)) {
             s = secondTier.get(index);
-            System.out.println("index: " + s.getSensorData().index + "\t" + baseTier.keySet().contains(s));
             children = baseTier.get(s);
-            if (children == null) {
+            if (children == null || children.isEmpty()) {
                 secondTier.remove(index);
-                //Naming.unbind(bindingString);
-                return null;
+                baseTier.remove(s);
+                return;
             }
-            for (SensorInterface tmp : children) {
-                tmp.setParentIndex(-1);
-                secondTier.put(tmp.getSensorData().index, tmp);
-                childrenIndexes.add(tmp.getSensorData().index);
-                System.out.println("index: " + tmp.getSensorData().index + " parent: " + tmp.getSensorData().parentIndex);
+            ArrayList<SensorInterface> kids = baseTier.remove(s);
+            SensorInterface newParent = kids.get(kids.size() - 1);
+            kids.remove(kids.size() - 1);
+            newParent.setParentIndex(-1);
+            for (SensorInterface kid : kids) {
+                kid.setParentIndex(newParent.getSensorData().index);
             }
-            baseTier.remove(s);
             secondTier.remove(index);
-            //Naming.unbind(bindingString);
-            return childrenIndexes;
+            secondTier.put(newParent.getSensorData().index, newParent);
+            baseTier.put(newParent, kids);
         } else {
-            System.out.println("HERE 2");
             for (SensorInterface tmp : baseTier.keySet()) {
                 ArrayList<SensorInterface> arr = baseTier.get(tmp);
                 for (SensorInterface si : arr) {
                     if (si.getSensorData().index == index) {
                         arr.remove(si);
-                        Naming.unbind(bindingString);
-                        return null;
                     }
                 }
             }
-        }
-        System.out.println(baseTier + "\n" + secondTier);
-        Naming.unbind(bindingString);
-        return null;
-    }
-
-    public static void main(String[] args) throws InterruptedException {
-        try {
-            //System.setSecurityManager(new RMISecurityManager());
-            Registry r = LocateRegistry.createRegistry(1234);
-            Supervisor theSupervisor = new Supervisor();
-            Naming.rebind("rmi://" + InetAddress.getLocalHost().getHostAddress() + ":1234/Supervisor", theSupervisor);
-            System.out.println("Supervisor running...");
-        } catch (Exception e) {
-            System.out.println("Fatal error: " + e.getMessage());
         }
     }
 
@@ -224,6 +108,57 @@ public class Supervisor extends UnicastRemoteObject implements SupervisorInterfa
             arr.addAll(tmp);
         }
         return arr;
+    }
+
+    public void balanceKids() throws RemoteException {
+        if (secondTier.isEmpty()) {
+            return;
+        }
+        ArrayList<SensorInterface> kidsOverflow = new ArrayList<>();
+        int kidsSum = 0;
+        int average;
+        for (ArrayList<SensorInterface> kids : baseTier.values()) {
+            kidsSum += kids.size();
+        }
+        average = (int) Math.ceil(kidsSum / secondTier.values().size() * 1.0);
+        if (average == 0) {
+            return;
+        }
+        //putting overflow kids on an array and removing them from the hashmap array
+        for (ArrayList<SensorInterface> kids : baseTier.values()) {
+            while (kids.size() > average) {
+                kidsOverflow.add(kids.get(kids.size() - 1));
+                kids.remove(kids.size() - 1);
+            }
+        }
+        //giving each parent the recommended number to balance number of kids
+        for (ArrayList<SensorInterface> kids : baseTier.values()) {
+            while (kids.size() < average) {
+                kids.add(kidsOverflow.get(kidsOverflow.size() - 1));
+                kidsOverflow.remove(kidsOverflow.size() - 1);
+            }
+        }
+        //in case an additional kid remaining in the overflow array
+        if (kidsOverflow.size() > 0) {
+            for (ArrayList<SensorInterface> kids : baseTier.values()) {
+                kids.add(kidsOverflow.get(kidsOverflow.size() - 1));
+                kidsOverflow.remove(kidsOverflow.size() - 1);
+                if (kidsOverflow.isEmpty()) {
+                    break;
+                }
+            }
+        }
+        //giving the kids the new parent index
+        for (SensorInterface SI : baseTier.keySet()) {
+            try {
+                int parentIndex = SI.getSensorData().index;
+                for (SensorInterface kid : baseTier.get(SI)) {
+                    kid.setParentIndex(parentIndex);
+                }
+            } catch (Exception ex) {
+                System.out.println("Fatal error: " + ex.toString());
+            }
+        }
     }
 
     @Override
@@ -244,5 +179,31 @@ public class Supervisor extends UnicastRemoteObject implements SupervisorInterfa
     @Override
     public String getSensorIP(int index) throws RemoteException {
         return ipGetter.get(index);
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        try {
+            Registry r = LocateRegistry.createRegistry(1234);
+            Supervisor theSupervisor = new Supervisor();
+            Naming.rebind("rmi://" + InetAddress.getLocalHost().getHostAddress() + ":1234/Supervisor", theSupervisor);
+            System.out.println("Supervisor running...");
+            Thread threadBalance = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        while (true) {
+                            Thread.sleep(10000);
+                            theSupervisor.balanceKids();
+                        }
+                    } catch (Exception ex) {
+                        Logger.getLogger(Supervisor.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
+            });
+            threadBalance.start();
+        } catch (Exception e) {
+            System.out.println("Fatal error: " + e.getMessage());
+        }
     }
 }

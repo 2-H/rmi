@@ -13,20 +13,17 @@ import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.rmi.Naming;
-import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Scanner;
 import javax.imageio.ImageIO;
 
-/**
- *
- * @author kassem
- */
 public class DataServerImp extends UnicastRemoteObject implements DataServerHost {
 
-    String imagePath = "Bird.jpg";
+    String imageName = "Bird.jpg";
+    String filePath;
 
     public DataServerImp() throws RemoteException {
         super();
@@ -34,21 +31,19 @@ public class DataServerImp extends UnicastRemoteObject implements DataServerHost
 
     @Override
     public String getImagePath() {
-        return imagePath;
+        return imageName;
     }
 
     @Override
     public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
+        this.imageName = imagePath;
     }
 
     @Override
     public byte[] getImage(int x1, int y1, int x2, int y2) throws RemoteException {
         Image src;
         try {
-            System.out.println("getImage from Data Server " + x1);
-
-            src = ImageIO.read(new File(imagePath));
+            src = ImageIO.read(new File(filePath+"\\"+imageName));
             int w = Math.abs(x2 - x1);
             int h = Math.abs(y2 - y1);
             BufferedImage dst = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
@@ -58,19 +53,18 @@ public class DataServerImp extends UnicastRemoteObject implements DataServerHost
             ImageIO.write(dst, "png", arr);
             return arr.toByteArray();
         } catch (IOException ex) {
-            System.out.println("DataServer.DataServerImp.getImage " + ex.getMessage());
+            System.out.println("Fatal error: " + ex.toString());
             return null;
         }
     }
 
     public static void main(String[] args) throws RemoteException, MalformedURLException, UnknownHostException {
-        //System.setSecurityManager(new RMISecurityManager());
-
         Registry r = LocateRegistry.createRegistry(1235);
         DataServerImp ds = new DataServerImp();
-        //ds.getImage(300, 200, 500,700);        
-        Naming.rebind("rmi://"+InetAddress.getLocalHost().getHostAddress()+":1235/DataServer", ds);
+        Naming.rebind("rmi://" + InetAddress.getLocalHost().getHostAddress() + ":1235/DataServer", ds);
         System.out.println("Data server running...");
+        System.out.print("Enter path of images file: ");
+        ds.filePath= new Scanner(System.in).nextLine();
     }
 
 }
