@@ -119,11 +119,14 @@ public class MainForm extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         btnRestart = new javax.swing.JButton();
         btnStop = new javax.swing.JButton();
-        btnBrowse = new javax.swing.JButton();
-        lblFileName = new javax.swing.JLabel();
         btnRefreshTable = new javax.swing.JButton();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        comboImage = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tbSensors.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -148,9 +151,13 @@ public class MainForm extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tbSensors.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         jScrollPane1.setViewportView(tbSensors);
 
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 69, 600, 230));
+
         jLabel1.setText("Sensors");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 68, -1, -1));
 
         jButton2.setText("Save Sensor");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -158,22 +165,41 @@ public class MainForm extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(375, 40, -1, -1));
+        getContentPane().add(txtsensorx1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 41, 42, -1));
+        txtsensorx1.getAccessibleContext().setAccessibleName("");
+
+        getContentPane().add(txtsensory1, new org.netbeans.lib.awtextra.AbsoluteConstraints(62, 41, 42, -1));
+        getContentPane().add(txtsensorx2, new org.netbeans.lib.awtextra.AbsoluteConstraints(122, 41, 42, -1));
+        getContentPane().add(txtsensory2, new org.netbeans.lib.awtextra.AbsoluteConstraints(182, 41, 42, -1));
 
         jLabel2.setText("X1");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 15, 16, -1));
 
         jLabel3.setText("Y1");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(62, 15, 16, -1));
 
         jLabel4.setText("X2");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(122, 15, -1, -1));
 
         jLabel5.setText("Y2");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(182, 15, -1, -1));
+        getContentPane().add(txtregionx1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 382, 42, -1));
+        getContentPane().add(txtregiony1, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 382, 42, -1));
+        getContentPane().add(txtregionx2, new org.netbeans.lib.awtextra.AbsoluteConstraints(106, 382, 42, -1));
+        getContentPane().add(txtregiony2, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 382, 42, -1));
 
         jLabel6.setText("Y2");
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 360, -1, -1));
 
         jLabel7.setText("X2");
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(106, 360, -1, -1));
 
         jLabel8.setText("Y1");
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 360, 16, -1));
 
         jLabel9.setText("X1");
+        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 360, 16, -1));
 
         jButton3.setText("Get Region");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -181,6 +207,7 @@ public class MainForm extends javax.swing.JFrame {
                 jButton3ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(206, 381, -1, -1));
 
         comboParent.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "NaN" }));
         comboParent.addActionListener(new java.awt.event.ActionListener() {
@@ -188,6 +215,7 @@ public class MainForm extends javax.swing.JFrame {
                 comboParentActionPerformed(evt);
             }
         });
+        getContentPane().add(comboParent, new org.netbeans.lib.awtextra.AbsoluteConstraints(242, 41, 127, -1));
 
         imageregion.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         imageregion.setText(".");
@@ -196,33 +224,46 @@ public class MainForm extends javax.swing.JFrame {
         imageregion.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         imageregion.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
         imageregion.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        getContentPane().add(imageregion, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 390, 790, 290));
 
         imagelabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         imagelabel1.setText(".");
         imagelabel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        getContentPane().add(imagelabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 120, 280, 173));
 
         jLabel10.setText("Parent");
+        getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(242, 15, 70, -1));
 
         x1Mod.setEnabled(false);
+        getContentPane().add(x1Mod, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 320, 42, -1));
 
         y1Mod.setEnabled(false);
+        getContentPane().add(y1Mod, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 320, 42, -1));
 
         x2Mod.setEnabled(false);
+        getContentPane().add(x2Mod, new org.netbeans.lib.awtextra.AbsoluteConstraints(106, 320, 42, -1));
 
         y2Mod.setEnabled(false);
+        getContentPane().add(y2Mod, new org.netbeans.lib.awtextra.AbsoluteConstraints(154, 320, 42, -1));
 
         jLabel11.setText("X1");
+        getContentPane().add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 305, -1, -1));
 
         jLabel12.setText("Y1");
+        getContentPane().add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 305, -1, -1));
 
         jLabel13.setText("X2");
+        getContentPane().add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(106, 305, -1, -1));
 
         jLabel14.setText("Y2");
+        getContentPane().add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(154, 305, -1, -1));
 
         jLabel15.setText("Status");
+        getContentPane().add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(201, 300, 50, 20));
 
         comboMod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Wake", "StandBy" }));
         comboMod.setEnabled(false);
+        getContentPane().add(comboMod, new org.netbeans.lib.awtextra.AbsoluteConstraints(202, 320, 89, -1));
 
         buttonMod.setText("Modify");
         buttonMod.addActionListener(new java.awt.event.ActionListener() {
@@ -230,6 +271,8 @@ public class MainForm extends javax.swing.JFrame {
                 buttonModActionPerformed(evt);
             }
         });
+        getContentPane().add(buttonMod, new org.netbeans.lib.awtextra.AbsoluteConstraints(297, 319, 85, -1));
+        getContentPane().add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1209, 873, 14, 198));
 
         btnRestart.setText("Restart");
         btnRestart.addActionListener(new java.awt.event.ActionListener() {
@@ -237,6 +280,7 @@ public class MainForm extends javax.swing.JFrame {
                 btnRestartActionPerformed(evt);
             }
         });
+        getContentPane().add(btnRestart, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 300, -1, -1));
 
         btnStop.setText("Stop");
         btnStop.addActionListener(new java.awt.event.ActionListener() {
@@ -244,15 +288,7 @@ public class MainForm extends javax.swing.JFrame {
                 btnStopActionPerformed(evt);
             }
         });
-
-        btnBrowse.setText("Browse");
-        btnBrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBrowseActionPerformed(evt);
-            }
-        });
-
-        lblFileName.setText("java.jpg");
+        getContentPane().add(btnStop, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 300, -1, -1));
 
         btnRefreshTable.setText("Refresh");
         btnRefreshTable.addActionListener(new java.awt.event.ActionListener() {
@@ -260,188 +296,24 @@ public class MainForm extends javax.swing.JFrame {
                 btnRefreshTableActionPerformed(evt);
             }
         });
+        getContentPane().add(btnRefreshTable, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 40, -1, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtsensorx1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtsensory1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtsensorx2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtsensory2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(174, 431, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(comboParent, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnRefreshTable)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 404, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnBrowse)
-                            .addComponent(lblFileName)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(32, 32, 32)
-                                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(32, 32, 32)
-                                        .addComponent(jLabel7))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(148, 148, 148)
-                                        .addComponent(jLabel6))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(txtregionx1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtregiony1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtregionx2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(txtregiony2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jButton3)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(imageregion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 672, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(x1Mod, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel11))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(y1Mod, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel12))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(x2Mod, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel13))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(y2Mod, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel14))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(comboMod, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(buttonMod, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel15)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(btnRestart)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(btnStop)))))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(imagelabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel10)
-                            .addComponent(btnBrowse))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtsensorx1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtsensory1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtsensorx2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtsensory2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(comboParent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton2)
-                            .addComponent(btnRefreshTable)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addComponent(lblFileName)))
-                .addGap(5, 5, 5)
-                .addComponent(jLabel1)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(imagelabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel11)
-                                    .addComponent(jLabel13)
-                                    .addComponent(jLabel14)
-                                    .addComponent(jLabel15))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(x1Mod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(y1Mod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(x2Mod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(y2Mod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(comboMod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(buttonMod)))
-                            .addComponent(jLabel12)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(btnRestart)
-                                .addComponent(btnStop)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(212, 212, 212)
-                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(49, 49, 49)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel8)
-                                    .addComponent(jLabel7)
-                                    .addComponent(jLabel6)
-                                    .addComponent(jLabel9))
-                                .addGap(7, 7, 7)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(txtregionx1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtregiony1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtregionx2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtregiony2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButton3))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(375, 375, 375)
-                        .addComponent(imageregion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())))
-        );
+        jLabel17.setText("Requested region");
+        getContentPane().add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 370, -1, -1));
 
-        txtsensorx1.getAccessibleContext().setAccessibleName("");
+        jLabel18.setText("Sensor region");
+        getContentPane().add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 100, -1, -1));
+
+        jLabel16.setText("Available photos");
+        getContentPane().add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 20, -1, -1));
+
+        comboImage.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bird.jpg", "Cat.jpg", "LU.jpg" }));
+        comboImage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboImageActionPerformed(evt);
+            }
+        });
+        getContentPane().add(comboImage, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 40, 120, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -805,17 +677,24 @@ public class MainForm extends javax.swing.JFrame {
         try {
             int index = (int) tbSensors.getValueAt(tbSensors.getSelectedRow(), 1);
             SupervisorInterface SRI = (SupervisorInterface) Naming.lookup(bindingString);
+            System.out.println("-1 -1 -1 -1");
             ArrayList<Integer> childrenIndexes = SRI.removeSensor(index, SRI.getSensorIP(index));
+            System.out.println("0 0 0 0");
             if (childrenIndexes != null && !childrenIndexes.isEmpty()) {
+                System.out.println("1 1 1 1");
                 for (int i = 0; i < tbSensors.getRowCount(); i++) {
+                    System.out.println("2 2 2 2");
                     int tmp = (int) tbSensors.getValueAt(i, 1);
                     if (childrenIndexes.contains(tmp)) {
+                        System.out.println("3 3 3 3");
                         tbSensors.setValueAt("NaN", i, 7);
                     }
                 }
             } else {
+                System.out.println("4 4 4 4");
                 tbSensors.setValueAt("NaN", tbSensors.getSelectedRow(), 7);
             }
+            System.out.println("5 5 5 5");
             tbSensors.setValueAt("Stopped", tbSensors.getSelectedRow(), 6);
             updateComboParents();
             ShowImage(index);
@@ -824,38 +703,24 @@ public class MainForm extends javax.swing.JFrame {
             //JOptionPane.showMessageDialog(null, "Error while trying to stop.\n" + ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnStopActionPerformed
-    private void btnBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBrowseActionPerformed
-
-        try {
-            JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-            File selectedFile = null;
-            int returnValue = jfc.showOpenDialog(null);
-            if (returnValue == JFileChooser.APPROVE_OPTION) {
-                selectedFile = jfc.getSelectedFile();
-                System.out.println(selectedFile.getAbsolutePath());
-            }
-            String path = selectedFile.getAbsolutePath();
-            String ext = path.substring(path.lastIndexOf(".") + 1);
-            if (!ext.equals("jpg") && !ext.equals("jpeg") && !ext.equals("png")) {
-                JOptionPane.showMessageDialog(null, "Unsupported extension.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            lblFileName.setText(selectedFile.getName());
-            DataServerHost ds = (DataServerHost) Naming.lookup(dataServerBinder);
-            ds.setImagePath(path);
-        } catch (HeadlessException | MalformedURLException | NotBoundException | RemoteException ex) {
-            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btnBrowseActionPerformed
 
     private void btnRefreshTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshTableActionPerformed
         try {
             refreshTable();
             updateComboParents();
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error while refresing.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error while refreshing.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnRefreshTableActionPerformed
+
+    private void comboImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboImageActionPerformed
+        try {
+            DataServerHost ds = (DataServerHost) Naming.lookup(dataServerBinder);
+            ds.setImagePath(comboImage.getSelectedItem().toString());
+        } catch (MalformedURLException | NotBoundException | RemoteException ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_comboImageActionPerformed
 
     private void updateComboParents() {
         try {
@@ -950,9 +815,9 @@ public class MainForm extends javax.swing.JFrame {
         try {
             Scanner sc = new Scanner(System.in);
             System.out.print("Enter ip of supervisor: ");
-            supervisorIP = sc.nextLine();
+            supervisorIP = sc.next();
             System.out.print("Enter ip of data server: ");
-            dataServerIP = sc.nextLine();
+            dataServerIP = sc.next();
             Naming.lookup("rmi://" + supervisorIP + ":1234/Supervisor");
             Naming.lookup("rmi://" + dataServerIP + ":1235/DataServer");
             bindingString = "rmi://" + supervisorIP + ":1234/Supervisor";
@@ -977,11 +842,11 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnBrowse;
     private javax.swing.JButton btnRefreshTable;
     private javax.swing.JButton btnRestart;
     private javax.swing.JButton btnStop;
     private javax.swing.JButton buttonMod;
+    private javax.swing.JComboBox<String> comboImage;
     private javax.swing.JComboBox<String> comboMod;
     private javax.swing.JComboBox<String> comboParent;
     private javax.swing.JLabel imagelabel1;
@@ -995,6 +860,9 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1005,7 +873,6 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JLabel lblFileName;
     private javax.swing.JTable tbSensors;
     private javax.swing.JTextField txtregionx1;
     private javax.swing.JTextField txtregionx2;

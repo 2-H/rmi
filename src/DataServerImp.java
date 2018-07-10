@@ -26,7 +26,7 @@ import javax.imageio.ImageIO;
  */
 public class DataServerImp extends UnicastRemoteObject implements DataServerHost {
 
-    String imagePath = "java.jpg";
+    String imagePath = "Bird.jpg";
 
     public DataServerImp() throws RemoteException {
         super();
@@ -70,6 +70,7 @@ public class DataServerImp extends UnicastRemoteObject implements DataServerHost
         DataServerImp ds = new DataServerImp();
         //ds.getImage(300, 200, 500,700);        
         Naming.rebind("rmi://"+InetAddress.getLocalHost().getHostAddress()+":1235/DataServer", ds);
+        System.out.println("Data server running...");
     }
 
 }

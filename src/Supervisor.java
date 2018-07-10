@@ -170,7 +170,7 @@ public class Supervisor extends UnicastRemoteObject implements SupervisorInterfa
             children = baseTier.get(s);
             if (children == null) {
                 secondTier.remove(index);
-                Naming.unbind(bindingString);
+                //Naming.unbind(bindingString);
                 return null;
             }
             for (SensorInterface tmp : children) {
@@ -181,7 +181,7 @@ public class Supervisor extends UnicastRemoteObject implements SupervisorInterfa
             }
             baseTier.remove(s);
             secondTier.remove(index);
-            Naming.unbind(bindingString);
+            //Naming.unbind(bindingString);
             return childrenIndexes;
         } else {
             System.out.println("HERE 2");
@@ -207,13 +207,7 @@ public class Supervisor extends UnicastRemoteObject implements SupervisorInterfa
             Registry r = LocateRegistry.createRegistry(1234);
             Supervisor theSupervisor = new Supervisor();
             Naming.rebind("rmi://" + InetAddress.getLocalHost().getHostAddress() + ":1234/Supervisor", theSupervisor);
-            while (true) {
-                try {
-                    theSupervisor.generator();
-                } catch (Exception ex) {
-                    System.out.println("Fatal error: " + ex.getMessage());
-                }
-            }
+            System.out.println("Supervisor running...");
         } catch (Exception e) {
             System.out.println("Fatal error: " + e.getMessage());
         }
