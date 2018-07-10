@@ -203,10 +203,10 @@ public class Supervisor extends UnicastRemoteObject implements SupervisorInterfa
 
     public static void main(String[] args) throws InterruptedException {
         try {
-            System.setSecurityManager(new RMISecurityManager());
+            //System.setSecurityManager(new RMISecurityManager());
             Registry r = LocateRegistry.createRegistry(1234);
             Supervisor theSupervisor = new Supervisor();
-            r.rebind("Supervisor", theSupervisor);
+            Naming.rebind("rmi://" + InetAddress.getLocalHost().getHostAddress() + ":1234/Supervisor", theSupervisor);
             while (true) {
                 try {
                     theSupervisor.generator();

@@ -5,7 +5,6 @@ import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
-import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -81,7 +80,7 @@ public class Sensor extends UnicastRemoteObject implements SensorInterface {
                 break;
             case 3: {//STOP
                 try {
-                    Naming.unbind("Supervisor");
+                    Naming.unbind("rmi://" + SRI.getSensorIP(index) + ":1236/Sensor" + index);
                     UnicastRemoteObject.unexportObject(SRI, true);
                 } catch (MalformedURLException | NotBoundException | RemoteException ex) {
                     System.out.println("Fatal error: " + ex.getMessage());
@@ -140,7 +139,7 @@ public class Sensor extends UnicastRemoteObject implements SensorInterface {
 
     public void run() throws UnknownHostException {
         try {
-            System.setSecurityManager(new RMISecurityManager());
+            //System.setSecurityManager(new RMISecurityManager());
 
             bindingString = "rmi://" + supervisorIP + ":1234/Supervisor";//SensorRoom
             SupervisorInterface SRI = (SupervisorInterface) Naming.lookup(bindingString);
@@ -156,7 +155,7 @@ public class Sensor extends UnicastRemoteObject implements SensorInterface {
 
             //String sensorname = "rmi://" + InetAddress.getLocalHost().getHostAddress() + ":1236/Sensor" + this.index;
             //System.out.println("rebind " + sensorname);
-            r.rebind("Sensor" + this.index, this);
+            Naming.rebind("rmi://" + InetAddress.getLocalHost().getHostAddress() + ":1236/Sensor" + this.index, this);
 //            Scanner sc = new Scanner(System.in);
 //            
 //            System.out.println("Enter x , y , width , height :");

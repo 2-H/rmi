@@ -9,7 +9,10 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.UnknownHostException;
+import java.rmi.Naming;
 import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -60,13 +63,13 @@ public class DataServerImp extends UnicastRemoteObject implements DataServerHost
         }
     }
 
-    public static void main(String[] args) throws RemoteException, MalformedURLException {
-        System.setSecurityManager(new RMISecurityManager());
+    public static void main(String[] args) throws RemoteException, MalformedURLException, UnknownHostException {
+        //System.setSecurityManager(new RMISecurityManager());
 
         Registry r = LocateRegistry.createRegistry(1235);
         DataServerImp ds = new DataServerImp();
         //ds.getImage(300, 200, 500,700);        
-        r.rebind("DataServer", ds);
+        Naming.rebind("rmi://"+InetAddress.getLocalHost().getHostAddress()+":1235/DataServer", ds);
     }
 
 }
